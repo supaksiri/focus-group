@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="ร่างกลยุทธ์การบริหารงานวิชาการที่มีประสิทธิผล สพม.ร้อยเอ็ด">
+<title>Strategy Dashboard · สพม.ร้อยเอ็ด</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & TOKENS ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:       #f5f6f8;
+  --bg2:      #eef0f4;
+  --surface:  #ffffff;
+  --surface2: #f9fafb;
+  --navy:     #0a1628;
+  --navy2:    #112240;
+  --navy3:    #1d3461;
+  --accent:   #00b4d8;
+  --accent2:  #0096c7;
+  --accent3:  #90e0ef;
+  --gold:     #f4a261;
+  --green:    #06d6a0;
+  --red:      #ef233c;
+  --amber:    #f4a261;
+  --text:     #0d1b2a;
+  --text2:    #3d5166;
+  --text3:    #6b7f96;
+  --border:   #dce3ec;
+  --border2:  #c8d3df;
+  --shadow-sm:0 1px 3px rgba(10,22,40,.07),0 1px 2px rgba(10,22,40,.05);
+  --shadow:   0 4px 14px rgba(10,22,40,.08),0 1px 4px rgba(10,22,40,.05);
+  --shadow-lg:0 12px 32px rgba(10,22,40,.1),0 4px 8px rgba(10,22,40,.06);
+  --radius-sm:6px;
+  --radius:   10px;
+  --radius-lg:16px;
+  /* tows colors */
+  --so:#2d3a8c; --so-l:#e8eaf6;
+  --st:#7b4f00; --st-l:#fff3e0;
+  --wo:#00695c; --wo-l:#e0f2f1;
+  --wt:#8b1a1a; --wt-l:#fce4e4;
+  /* g colors */
+  --g1:#4361ee; --g1-l:#eef0fd;
+  --g2:#10b981; --g2-l:#ecfdf5;
+  --g3:#f59e0b; --g3-l:#fffbeb;
+  --g4:#ef4444; --g4-l:#fef2f2;
+  --g5:#3b82f6; --g5-l:#eff6ff;
+  --g6:#8b5cf6; --g6-l:#f5f3ff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* ── UTILITY ── */
+.mono{font-family:'Space Mono',monospace}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ── HEADER ── */
+.site-header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);
+  color:#fff;border-bottom:2px solid var(--accent);
+  position:relative;overflow:hidden;
+}
+.site-header::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Ccircle cx='30' cy='30' r='1' fill='%2300b4d8' opacity='.08'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hdr-inner{max-width:1160px;margin:0 auto;padding:28px 20px 24px;position:relative}
+.hdr-eyebrow{font-size:10.5px;letter-spacing:.16em;color:var(--accent3);text-transform:uppercase;margin-bottom:10px;font-family:'Space Mono',monospace;opacity:.85}
+.hdr-title{font-size:clamp(17px,3.2vw,24px);font-weight:700;line-height:1.35;margin-bottom:5px}
+.hdr-sub{font-size:13px;color:#7fb3d3;margin-bottom:22px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:14px 12px;text-align:center;backdrop-filter:blur(4px)}
+.kpi-n{font-size:26px;font-weight:700;color:var(--accent);font-family:'Space Mono',monospace;line-height:1}
+.kpi-l{font-size:11px;color:#80a8c4;margin-top:5px}
+
+/* ── NAV ── */
+.site-nav{background:var(--navy2);position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(0,180,216,.25)}
+.nav-scroll{max-width:1160px;margin:0 auto;padding:0 16px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-btn{
+  background:none;border:none;color:#6a90b0;
+  font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;
+  padding:13px 14px;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;transition:all .2s;flex-shrink:0;
+}
+.nav-btn:hover{color:#b8d4e8;background:rgba(255,255,255,.04)}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,180,216,.07)}
+
+/* ── LAYOUT ── */
+.content{max-width:1160px;margin:0 auto;padding:24px 16px 48px}
+.panel{display:none}.panel.active{display:block}
+
+/* ── OVERVIEW ── */
+.ov-intro{font-size:13px;color:var(--text3);margin-bottom:18px;padding:12px 16px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);border-left:3px solid var(--accent)}
+.ov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:600px){.ov-grid{grid-template-columns:1fr}}
+@media(min-width:1060px){.ov-grid{grid-template-columns:repeat(3,1fr)}}
+.ov-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+  cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;
+  overflow:hidden;
+}
+.ov-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
+.ov-card-top{height:4px}
+.ov-card-body{padding:16px 18px 14px}
+.ov-row1{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ov-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0;font-family:'Space Mono',monospace}
+.ov-meta{flex:1}
+.ov-gcode{font-size:10px;font-weight:600;letter-spacing:.08em;margin-bottom:2px;font-family:'Space Mono',monospace}
+.ov-gname{font-size:13px;font-weight:600;line-height:1.4;color:var(--text)}
+.ov-stats{display:flex;gap:14px;margin:10px 0 8px}
+.ov-stat-n{font-size:17px;font-weight:700;font-family:'Space Mono',monospace}
+.ov-stat-l{font-size:10px;color:var(--text3);margin-top:1px}
+.pni-row-mini{margin-bottom:8px}
+.pni-label-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;font-family:'Space Mono',monospace}
+.pni-track{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.pni-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.tag-row{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:10px;letter-spacing:.03em}
+
+/* ── DETAIL HEADER ── */
+.det-hdr{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow);
+  padding:20px 22px;margin-bottom:18px;
+  display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
+}
+@media(max-width:560px){.det-hdr{grid-template-columns:1fr;gap:10px}}
+.det-gbadge{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff;flex-shrink:0;font-family:'Space Mono',monospace}
+.det-eyebrow{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;font-family:'Space Mono',monospace;font-weight:700}
+.det-title{font-size:clamp(15px,2.5vw,18px);font-weight:700;line-height:1.4;color:var(--text);margin-bottom:4px}
+.det-subtitle{font-size:12.5px;color:var(--text3);margin-bottom:12px}
+.det-kpi-row{display:flex;gap:10px;flex-wrap:wrap}
+.det-kpi{background:var(--bg);border-radius:var(--radius-sm);padding:7px 12px;border:1px solid var(--border);text-align:center;min-width:70px}
+.det-kpi-n{font-size:15px;font-weight:700;font-family:'Space Mono',monospace}
+.det-kpi-l{font-size:9.5px;color:var(--text3);margin-top:2px}
+
+/* ── PNI TABLE ── */
+.pni-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px}
+.section-title{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);font-family:'Space Mono',monospace}
+.pni-table{width:100%;border-collapse:collapse}
+.pni-table th{font-size:10px;font-weight:600;color:var(--text3);text-align:left;padding:0 6px 8px;border-bottom:1px solid var(--border);font-family:'Space Mono',monospace;letter-spacing:.06em}
+.pni-table td{padding:7px 6px;border-bottom:1px solid var(--bg2);vertical-align:middle;font-size:12.5px}
+.pni-table tr:last-child td{border-bottom:none}
+.pni-s{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;font-family:'Space Mono',monospace}
+.pni-name-cell{max-width:340px;line-height:1.4}
+@media(max-width:560px){.pni-name-cell{max-width:160px;font-size:11.5px}}
+.mini-bar{width:70px;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden}
+@media(max-width:480px){.mini-bar{display:none}}
+.mini-fill{height:100%;border-radius:2px}
+.pni-val{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-align:right;white-space:nowrap}
+
+/* ── TOWS TABS ── */
+.tows-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tows-btn{
+  border:1.5px solid var(--border);background:var(--surface);
+  font-family:'Sarabun',sans-serif;font-size:12px;font-weight:600;
+  padding:7px 14px;border-radius:20px;cursor:pointer;color:var(--text3);
+  transition:all .15s;white-space:nowrap;
+}
+.tows-btn:hover{border-color:var(--border2);color:var(--text2)}
+.tows-btn.so.on{background:var(--so);border-color:var(--so);color:#fff}
+.tows-btn.st.on{background:var(--st);border-color:var(--st);color:#fff}
+.tows-btn.wo.on{background:var(--wo);border-color:var(--wo);color:#fff}
+.tows-btn.wt.on{background:var(--wt);border-color:var(--wt);color:#fff}
+.tows-pane{display:none}.tows-pane.on{display:block}
+.tows-summary{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;
+  font-size:12.5px;color:var(--text3);display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+}
+.tows-summary b{color:var(--text)}
+.tows-summary .cnt-pill{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--bg2);color:var(--text2)}
+
+/* ── ACCORDION ── */
+.acc-list{display:flex;flex-direction:column;gap:8px}
+.acc-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:box-shadow .15s}
+.acc-item.open{box-shadow:var(--shadow)}
+.acc-head{
+  display:grid;grid-template-columns:auto 1fr auto;gap:10px;
+  align-items:flex-start;padding:13px 15px;cursor:pointer;
+  transition:background .12s;
+}
+.acc-head:hover{background:var(--surface2)}
+.acc-num{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:8px;flex-shrink:0;margin-top:2px;font-family:'Space Mono',monospace}
+.acc-title{font-size:13.5px;font-weight:600;line-height:1.45;color:var(--text)}
+.acc-swot{font-size:10.5px;color:var(--text3);margin-top:3px;font-family:'Space Mono',monospace}
+.acc-chevron{width:20px;height:20px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:transform .2s;font-size:11px;color:var(--text3)}
+.acc-item.open .acc-chevron{transform:rotate(180deg)}
+.acc-body{display:none;border-top:1px solid var(--border)}
+.acc-item.open .acc-body{display:block}
+
+/* ── WAYS ── */
+.ways-wrap{padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.way{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:flex-start;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);padding:9px 11px}
+.way-n{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;color:#fff;flex-shrink:0;margin-top:1px;white-space:nowrap;font-family:'Space Mono',monospace}
+.way-t{font-size:13px;line-height:1.55;color:var(--text)}
+
+/* ── SECTION DIVIDER ── */
+.sec-divider{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin:20px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border);font-family:'Space Mono',monospace;display:flex;align-items:center;gap:8px}
+.sec-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--navy);color:#4a7090;text-align:center;padding:18px 16px;font-size:11.5px;line-height:1.7;margin-top:32px;border-top:1px solid #1d3461}
+.site-footer a{color:var(--accent3);text-decoration:none}
+
+/* ── RESPONSIVE HELPERS ── */
+@media(max-width:640px){
+  .hdr-title{font-size:16px}
+  .det-hdr{padding:15px}
+  .det-gbadge{width:44px;height:44px;font-size:15px;border-radius:10px}
+  .pni-section{padding:14px 12px}
+  .acc-head{padding:11px 12px}
+  .acc-title{font-size:13px}
+  .way{padding:8px 10px}
+  .way-t{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<a class="sr-only" href="#main-content">ข้ามไปเนื้อหาหลัก</a>
+
+<header class="site-header" role="banner">
+ <div class="hdr-inner">
+  <p class="hdr-eyebrow">สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด · TOWS Matrix Analysis</p>
+  <h1 class="hdr-title">ร่างกลยุทธ์การบริหารงานวิชาการที่มีประสิทธิผล<br>ของโรงเรียนสังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</h1>
+  <p class="hdr-sub">นางสาวสุพักตร์ศิริ พืชสิงห์ · สาขาวิชาการบริหารการศึกษา คณะครุศาสตร์และการพัฒนามนุษย์ มหาวิทยาลัยราชภัฏร้อยเอ็ด</p>
+  <div class="kpi-grid">
+   <div class="kpi-card"><div class="kpi-n">6</div><div class="kpi-l">กลยุทธ์หลัก</div></div>
+   <div class="kpi-card"><div class="kpi-n">46</div><div class="kpi-l">กลยุทธ์รอง</div></div>
+   <div class="kpi-card"><div class="kpi-n">222</div><div class="kpi-l">วิธีดำเนินการ</div></div>
+   <div class="kpi-card"><div class="kpi-n">4</div><div class="kpi-l">ทิศทาง TOWS</div></div>
+  </div>
+ </div>
+</header>
+
+<nav class="site-nav" role="navigation" aria-label="เมนูหลัก">
+ <div class="nav-scroll">
+  <button class="nav-btn active" onclick="showPanel('ov',this)" aria-current="page">ภาพรวม</button>
+  <button class="nav-btn" onclick="showPanel('g1',this)">G1 · พัฒนาหลักสูตร</button>
+  <button class="nav-btn" onclick="showPanel('g2',this)">G2 · จัดการเรียนรู้</button>
+  <button class="nav-btn" onclick="showPanel('g3',this)">G3 · วัดและประเมินผล</button>
+  <button class="nav-btn" onclick="showPanel('g4',this)">G4 · สื่อ&เทคโนโลยี</button>
+  <button class="nav-btn" onclick="showPanel('g5',this)">G5 · นิเทศการศึกษา</button>
+  <button class="nav-btn" onclick="showPanel('g6',this)">G6 · ประกันคุณภาพ</button>
+ </div>
+</nav>
+
+<main id="main-content" class="content">
+<!-- ══════════ OVERVIEW PANEL ══════════ -->
+<div id="panel-ov" class="panel active">
+<p class="ov-intro">แผนที่กลยุทธ์การบริหารงานวิชาการที่มีประสิทธิผล วิเคราะห์โดย <b>TOWS Matrix</b> จากผลการสำรวจ PNI<sub>modified</sub> สภาพแวดล้อมภายในและภายนอก ทั้ง 6 ด้าน · คลิกที่การ์ดเพื่อดูรายละเอียด</p>
+<div class="ov-grid">
+
+<div class="ov-card" onclick="goTo('g1')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 1">
+ <div class="ov-card-top" style="background:var(--g1)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g1)">G1</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g1)">กลยุทธ์หลักที่ 1 · S×O จุดแข็ง × โอกาส</div>
+    <div class="ov-gname">ยกระดับหลักสูตรสถานศึกษาให้สอดคล้องกับบริบทชุมชนและมาตรฐานการศึกษาแห่งชาติ</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g1)">9</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g1)">45</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#06d6a0">S</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#3b82f6">O</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.1240</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:41%;background:var(--g1)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 6 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 3 รายการ</span>
+  </div>
+ </div>
+</div>
+
+<div class="ov-card" onclick="goTo('g2')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 2">
+ <div class="ov-card-top" style="background:var(--g2)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g2)">G2</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g2)">กลยุทธ์หลักที่ 2 · S×O จุดแข็ง × โอกาส</div>
+    <div class="ov-gname">พลิกโฉมการจัดการเรียนรู้เชิงนวัตกรรมสู่มาตรฐานคุณภาพผู้เรียนในศตวรรษที่ 21</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g2)">8</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g2)">40</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#06d6a0">S</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#3b82f6">O</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.1674</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:56%;background:var(--g2)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 6 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 3 รายการ</span>
+  </div>
+ </div>
+</div>
+
+<div class="ov-card" onclick="goTo('g3')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 3">
+ <div class="ov-card-top" style="background:var(--g3)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g3)">G3</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g3)">กลยุทธ์หลักที่ 3 · W×O จุดอ่อน × โอกาส</div>
+    <div class="ov-gname">ปฏิรูประบบการวัดและประเมินผลการเรียนรู้ฐานสมรรถนะเพื่อยกระดับคุณภาพผู้เรียนรายบุคคล</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g3)">7</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g3)">34</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#ef4444">W</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#3b82f6">O</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.1914</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:64%;background:var(--g3)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 4 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 4 รายการ</span>
+  </div>
+ </div>
+</div>
+
+<div class="ov-card" onclick="goTo('g4')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 4">
+ <div class="ov-card-top" style="background:var(--g4)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g4)">G4</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g4)">กลยุทธ์หลักที่ 4 · W×T จุดอ่อน × ภัยคุกคาม ⚠ PNI สูงสุด</div>
+    <div class="ov-gname">พลิกโฉมระบบสื่อและเทคโนโลยีทางการศึกษาเพื่อเสริมสร้างสมรรถนะดิจิทัลของครูและผู้เรียน</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g4)">7</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g4)">33</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#ef4444">W</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#f59e0b">T</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.2345</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:78%;background:var(--g4)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 5 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 3 รายการ</span>
+   <span class="tag" style="background:#fef9c3;color:#92400e">⚠ ความต้องการสูงสุด</span>
+  </div>
+ </div>
+</div>
+
+<div class="ov-card" onclick="goTo('g5')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 5">
+ <div class="ov-card-top" style="background:var(--g5)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g5)">G5</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g5)">กลยุทธ์หลักที่ 5 · W×T จุดอ่อน × ภัยคุกคาม</div>
+    <div class="ov-gname">ปฏิรูประบบนิเทศการศึกษาเชิงกัลยาณมิตรสู่การพัฒนาวิชาชีพครูอย่างต่อเนื่อง</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g5)">7</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g5)">35</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#ef4444">W</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#f59e0b">T</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.2140</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:71%;background:var(--g5)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 5 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 4 รายการ</span>
+  </div>
+ </div>
+</div>
+
+<div class="ov-card" onclick="goTo('g6')" tabindex="0" role="button" aria-label="กลยุทธ์หลักที่ 6">
+ <div class="ov-card-top" style="background:var(--g6)"></div>
+ <div class="ov-card-body">
+  <div class="ov-row1">
+   <div class="ov-badge" style="background:var(--g6)">G6</div>
+   <div class="ov-meta">
+    <div class="ov-gcode" style="color:var(--g6)">กลยุทธ์หลักที่ 6 · S×O จุดแข็ง × โอกาส</div>
+    <div class="ov-gname">ขับเคลื่อนระบบประกันคุณภาพภายในสถานศึกษาสู่วัฒนธรรมคุณภาพที่ยั่งยืน</div>
+   </div>
+  </div>
+  <div class="ov-stats">
+   <div><div class="ov-stat-n" style="color:var(--g6)">8</div><div class="ov-stat-l">กลยุทธ์รอง</div></div>
+   <div><div class="ov-stat-n" style="color:var(--g6)">35</div><div class="ov-stat-l">วิธีดำเนินการ</div></div>
+   <div><div class="ov-stat-n" style="color:#06d6a0">S</div><div class="ov-stat-l">ภายใน</div></div>
+   <div><div class="ov-stat-n" style="color:#3b82f6">O</div><div class="ov-stat-l">ภายนอก</div></div>
+  </div>
+  <div class="pni-row-mini">
+   <div class="pni-label-row"><span>PNI<sub>mod</sub> ภายใน</span><span>0.1078</span></div>
+   <div class="pni-track"><div class="pni-fill" style="width:36%;background:var(--g6)"></div></div>
+  </div>
+  <div class="tag-row">
+   <span class="tag" style="background:#e0f2fe;color:#0369a1">จุดแข็ง 3 รายการ</span>
+   <span class="tag" style="background:#fee2e2;color:#b91c1c">จุดอ่อน 5 รายการ</span>
+  </div>
+ </div>
+</div>
+
+</div><!-- /ov-grid -->
+</div><!-- /panel-ov -->
+<div id="panel-g1" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#4361ee">G1</div><div><div class="det-eyebrow" style="color:#4361ee">กลยุทธ์หลักที่ 1 · S×O</div><h2 class="det-title">ยกระดับหลักสูตรสถานศึกษาให้สอดคล้องกับบริบทชุมชนและมาตรฐานการศึกษาแห่งชาติ</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.1240 · ภายนอก = 0.1810</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#4361ee">9</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#4361ee">45</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#065f46">S</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#1d4ed8">O</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">วิเคราะห์ข้อมูลสภาพปัญหาและความต้องการของสังคม ชุมชน และผู้เรียน เพื่อกำหนดจุดมุ่งหมายของหลักสูตรสถานศึกษา</td><td><div class="mini-bar"><div class="mini-fill" style="width:38%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1151</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">เปิดโอกาสให้ผู้บริหาร ครู ผู้ปกครอง และชุมชนมีส่วนร่วมในการออกแบบและพัฒนาหลักสูตรสถานศึกษา</td><td><div class="mini-bar"><div class="mini-fill" style="width:39%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1170</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">มีการนิเทศ ติดตาม และประเมินผลการใช้หลักสูตรสถานศึกษาอย่างเป็นระบบ</td><td><div class="mini-bar"><div class="mini-fill" style="width:40%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1194</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับมอบหมายสอนวิชาที่ตรงตามวุฒิและความถนัดของตนเอง</td><td><div class="mini-bar"><div class="mini-fill" style="width:40%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1211</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">นักเรียนมีผลสัมฤทธิ์ทางการเรียนสูงขึ้นกว่าเกณฑ์ที่สถานศึกษากำหนด</td><td><div class="mini-bar"><div class="mini-fill" style="width:41%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1218</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">หลักสูตรสถานศึกษาของโรงเรียนมีความทันสมัยสามารถตอบสนองต่อการเปลี่ยนแปลงของสังคม</td><td><div class="mini-bar"><div class="mini-fill" style="width:41%;background:#4361ee"></div></div></td><td class="pni-val" style="color:#4361ee">0.1239</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">หลักสูตรสถานศึกษามีโครงสร้างที่มุ่งพัฒนาสมรรถนะสำคัญของผู้เรียนให้สอดคล้องกับมาตรฐานการเรียนรู้</td><td><div class="mini-bar"><div class="mini-fill" style="width:42%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1263</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนมีการทบทวนและปรับปรุงหลักสูตรสถานศึกษาอย่างต่อเนื่องให้ทันกับการเปลี่ยนแปลง</td><td><div class="mini-bar"><div class="mini-fill" style="width:45%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1355</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีเจตคติที่ดีต่อการศึกษาเล่าเรียน</td><td><div class="mini-bar"><div class="mini-fill" style="width:46%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1365</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g1','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">3 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g1','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">3 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g1','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g1','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">1 กลยุทธ์รอง</small></button>
+</div>
+<div id="g1-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">3 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">1.1</span><div><div class="acc-title">ยกระดับหลักสูตรสถานศึกษาโดยบูรณาการข้อมูลชุมชนกับนโยบายการศึกษาแห่งชาติและกิจกรรมเสริมจากภายนอก</div><div class="acc-swot">S1,S2 × O2,O3,O4</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.1.1</span><span class="way-t">จัดตั้งคณะกรรมการพัฒนาหลักสูตรสถานศึกษาที่มีองค์ประกอบครอบคลุมผู้บริหาร ครู ผู้ปกครอง ตัวแทนชุมชน และสถานประกอบการในพื้นที่ โดยกำหนดบทบาทหน้าที่และปฏิทินการปฏิบัติงานที่ชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.1.2</span><span class="way-t">ดำเนินการสำรวจและวิเคราะห์ข้อมูลสภาพปัญหา ความต้องการของชุมชน และความคาดหวังของผู้ปกครองที่มีต่อหลักสูตรสถานศึกษา โดยใช้เครื่องมือสำรวจที่หลากหลาย</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.1.3</span><span class="way-t">นำข้อมูลจากการสำรวจชุมชนมาวิเคราะห์ร่วมกับกรอบนโยบายการศึกษาของกระทรวงศึกษาธิการ เพื่อกำหนดจุดมุ่งหมายและโครงสร้างหลักสูตรที่ตอบสนองทั้งบริบทท้องถิ่นและมาตรฐานแห่งชาติ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.1.4</span><span class="way-t">บูรณาการกิจกรรมและมาตรการส่งเสริมคุณลักษณะอันพึงประสงค์จากหน่วยงานภายนอกเข้าในหลักสูตรสถานศึกษาอย่างเป็นระบบ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.1.5</span><span class="way-t">จัดเวทีประชาคมหลักสูตรอย่างน้อยปีละ 1 ครั้ง เพื่อนำเสนอร่างหลักสูตรและรับฟังข้อเสนอแนะจากทุกภาคส่วนก่อนประกาศใช้จริง</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">1.2</span><div><div class="acc-title">เสริมสร้างระบบนิเทศและติดตามการใช้หลักสูตรให้มีประสิทธิภาพโดยบูรณาการกับการนิเทศจากเขตพื้นที่</div><div class="acc-swot">S3 × O1</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.2.1</span><span class="way-t">จัดทำแผนนิเทศติดตามการใช้หลักสูตรสถานศึกษาประจำปีการศึกษา โดยกำหนดตัวชี้วัดความสำเร็จที่วัดได้จริงและสอดคล้องกับแนวทางของสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.2.2</span><span class="way-t">ประสานงานกับศึกษานิเทศก์สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด เพื่อบูรณาการแผนนิเทศภายในสถานศึกษาเข้ากับแผนนิเทศจากเขตพื้นที่</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.2.3</span><span class="way-t">ดำเนินการนิเทศชั้นเรียนอย่างสม่ำเสมอไม่น้อยกว่าภาคเรียนละ 2 ครั้งต่อครู โดยใช้เครื่องมือสังเกตการสอนและแบบบันทึกที่มาตรฐานเดียวกัน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.2.4</span><span class="way-t">นำผลการนิเทศมาวิเคราะห์ร่วมกันในกลุ่มสาระการเรียนรู้ เพื่อระบุแนวปฏิบัติที่ดีและประเด็นที่ต้องพัฒนา และจัดทำแผนพัฒนาหลักสูตรในรอบถัดไป</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.2.5</span><span class="way-t">รายงานผลการนิเทศติดตามต่อคณะกรรมการสถานศึกษาและสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ดทุกสิ้นภาคเรียน พร้อมข้อเสนอแนะในการปรับปรุงหลักสูตร</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">1.3</span><div><div class="acc-title">ยกระดับคุณภาพหลักสูตรให้ทันสมัยโดยเชื่อมโยงกับการพัฒนาครูตรงสาขา ภูมิปัญญาท้องถิ่น และข้อมูลตลาดแรงงาน</div><div class="acc-swot">S4,S5,S6 × O5,O6,O7</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.1</span><span class="way-t">จัดทำฐานข้อมูลภูมิปัญญาท้องถิ่น อาชีพชุมชน และศิลปวัฒนธรรมในพื้นที่จังหวัดร้อยเอ็ด เพื่อใช้เป็นแหล่งข้อมูลในการพัฒนาสาระการเรียนรู้ท้องถิ่น</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.2</span><span class="way-t">วิเคราะห์แนวโน้มความต้องการกำลังคนและตลาดแรงงานในพื้นที่ร้อยเอ็ดและภาคตะวันออกเฉียงเหนือ ร่วมกับสถานประกอบการและสำนักงานจัดหางานจังหวัด อย่างน้อยปีละ 1 ครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.3</span><span class="way-t">ส่งเสริมให้ครูที่ได้รับมอบหมายสอนตรงวุฒิและความถนัดนำความเชี่ยวชาญมาบูรณาการภูมิปัญญาท้องถิ่นเข้าในเนื้อหาการสอนในแต่ละกลุ่มสาระ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.4</span><span class="way-t">นำผลสัมฤทธิ์ทางการเรียนของนักเรียนที่สูงกว่าเกณฑ์มาเชื่อมโยงกับข้อมูลตลาดแรงงาน เพื่อกำหนดทิศทางการพัฒนาหลักสูตรที่ตอบสนองทั้งคุณภาพวิชาการและความต้องการกำลังคน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.5</span><span class="way-t">จัดอบรมครูเพื่อพัฒนาทักษะการออกแบบหน่วยการเรียนรู้ที่บูรณาการสาระท้องถิ่นกับมาตรฐานหลักสูตรแกนกลาง โดยวิทยากรผู้เชี่ยวชาญด้านการพัฒนาหลักสูตร</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">1.3.6</span><span class="way-t">ประเมินและทบทวนความทันสมัยของหลักสูตรสถานศึกษาทุกปีการศึกษา โดยใช้ผลสัมฤทธิ์ผู้เรียนและข้อมูลตลาดแรงงานเป็นตัวชี้วัดหลัก</span></div>
+</div></div></div>
+</div></div>
+<div id="g1-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">3 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">1.4</span><div><div class="acc-title">ปฏิรูปโครงสร้างหลักสูตรสถานศึกษาสู่ฐานสมรรถนะโดยใช้โอกาสจากนโยบายและการมีส่วนร่วมของชุมชน</div><div class="acc-swot">W1 × O3,O4</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">1.4.1</span><span class="way-t">แต่งตั้งคณะทำงานปรับปรุงโครงสร้างหลักสูตรฐานสมรรถนะ ประกอบด้วยผู้บริหาร หัวหน้ากลุ่มสาระ และผู้เชี่ยวชาญ โดยใช้กรอบสมรรถนะสำคัญตามนโยบายของกระทรวงศึกษาธิการเป็นแนวทาง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.4.2</span><span class="way-t">สำรวจความคาดหวังของผู้ปกครองและชุมชนต่อสมรรถนะที่ต้องการให้ผู้เรียนมี นำมาวิเคราะห์ร่วมกับกรอบสมรรถนะระดับชาติ เพื่อออกแบบโครงสร้างที่ตอบสนองทั้งสองระดับ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.4.3</span><span class="way-t">จัดทำร่างโครงสร้างหลักสูตรฐานสมรรถนะและนำเสนอต่อคณะกรรมการสถานศึกษาและตัวแทนชุมชน เพื่อรับฟังข้อเสนอแนะก่อนนำไปใช้จริง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.4.4</span><span class="way-t">พัฒนาคู่มือการจัดการเรียนรู้ฐานสมรรถนะสำหรับครูทุกกลุ่มสาระ พร้อมตัวอย่างแผนการสอนและเครื่องมือประเมินสมรรถนะที่สอดคล้องกับโครงสร้างใหม่</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.4.5</span><span class="way-t">ติดตามและประเมินผลการนำโครงสร้างหลักสูตรฐานสมรรถนะไปใช้จริงทุกภาคเรียน และปรับปรุงอย่างต่อเนื่องโดยใช้ข้อมูลจากผู้เรียน ครู และชุมชน</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">1.5</span><div><div class="acc-title">พัฒนากลไกทบทวนและปรับปรุงหลักสูตรอย่างต่อเนื่องโดยใช้ข้อมูลการนิเทศ ภูมิปัญญาท้องถิ่น และตลาดแรงงาน</div><div class="acc-swot">W2 × O1,O5,O7</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">1.5.1</span><span class="way-t">กำหนดรอบการทบทวนหลักสูตรสถานศึกษาเป็น 2 ระดับ ได้แก่ การทบทวนรายภาคเรียนระดับรายวิชา และการทบทวนรายปีระดับโครงสร้างหลักสูตร โดยมีปฏิทินและผู้รับผิดชอบชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.5.2</span><span class="way-t">ใช้วงรอบการนิเทศติดตามจากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ดเป็นกลไกกระตุ้นให้โรงเรียนทบทวนและปรับปรุงหลักสูตรอย่างสม่ำเสมอ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.5.3</span><span class="way-t">นำทรัพยากรทางวัฒนธรรมและภูมิปัญญาท้องถิ่นในชุมชนมาเป็นข้อมูลนำเข้าในการเพิ่มเติมเนื้อหาท้องถิ่นในหลักสูตรอย่างสม่ำเสมอ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.5.4</span><span class="way-t">ใช้ข้อมูลแนวโน้มความต้องการกำลังคนและตลาดแรงงานเป็นฐานในการกำหนดเนื้อหาและสมรรถนะที่ผู้เรียนต้องพัฒนาสู่อนาคต</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.5.5</span><span class="way-t">บันทึกผลการทบทวนและประเด็นที่ต้องปรับปรุงในระบบสารสนเทศของสถานศึกษา เพื่อให้ครูทุกคนเข้าถึงข้อมูลและนำไปใช้ในการพัฒนาการสอนได้ทันที</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">1.6</span><div><div class="acc-title">เสริมสร้างเจตคติและแรงจูงใจใฝ่เรียนรู้ของผู้เรียนผ่านการบูรณาการกิจกรรมเสริมหลักสูตรและการพัฒนาครู</div><div class="acc-swot">W3 × O2,O6</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">1.6.1</span><span class="way-t">สำรวจสาเหตุและปัจจัยที่ส่งผลต่อเจตคติของผู้เรียนต่อการศึกษา โดยใช้แบบสอบถามและการสัมภาษณ์เชิงลึก เพื่อออกแบบมาตรการแก้ไขได้ตรงจุด</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.6.2</span><span class="way-t">บูรณาการกิจกรรมและมาตรการส่งเสริมคุณลักษณะอันพึงประสงค์จากหน่วยงานภายนอกเข้าในหลักสูตรสถานศึกษา เช่น โครงการจิตอาสา ค่ายคุณธรรม และกิจกรรมสร้างสรรค์ชุมชน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.6.3</span><span class="way-t">จัดอบรมพัฒนาทักษะครูด้านการสร้างแรงจูงใจและบรรยากาศการเรียนรู้เชิงบวก โดยใช้โอกาสจากนโยบายพัฒนาครูของกระทรวงศึกษาธิการที่มีความต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.6.4</span><span class="way-t">ออกแบบกิจกรรมเสริมหลักสูตรที่เชื่อมโยงกับชีวิตจริงของผู้เรียนและชุมชน เพื่อสร้างความหมายและแรงบันดาลใจในการเรียนรู้</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">1.6.5</span><span class="way-t">ติดตามการเปลี่ยนแปลงเจตคติของผู้เรียนทุกภาคเรียน โดยใช้เครื่องมือวัดเจตคติที่มีมาตรฐาน และนำผลมาปรับกิจกรรมเสริมสร้างแรงจูงใจในรอบถัดไป</span></div>
+</div></div></div>
+</div></div>
+<div id="g1-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">1.7</span><div><div class="acc-title">เสริมสร้างความเข้มแข็งของหลักสูตรโดยใช้จุดแข็งด้านการมีส่วนร่วมและการนิเทศ รับมือกับข้อจำกัดของระบบสารสนเทศ</div><div class="acc-swot">S1,S2,S3 × T1</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">1.7.1</span><span class="way-t">พัฒนาระบบรวบรวมข้อมูลหลักสูตรจากปฐมภูมิภายในสถานศึกษา ได้แก่ แบบสอบถามครู ผู้เรียน และผู้ปกครอง เพื่อสร้างฐานข้อมูลหลักสูตรที่ไม่ต้องพึ่งพาระบบสารสนเทศภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.7.2</span><span class="way-t">ใช้กระบวนการมีส่วนร่วมของผู้บริหาร ครู ผู้ปกครอง และชุมชนในการออกแบบและพัฒนาหลักสูตรเป็นช่องทางรวบรวมข้อมูลที่หลากหลายมุมมองและแม่นยำ ทดแทนข้อจำกัดของระบบสารสนเทศภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.7.3</span><span class="way-t">จัดทำระบบบันทึกข้อมูลการนิเทศและติดตามหลักสูตรแบบ offline ที่สามารถสรุปและรายงานได้ทันที โดยใช้ความเข้มแข็งของระบบนิเทศภายในเป็นฐาน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.7.4</span><span class="way-t">สร้างเครือข่ายแลกเปลี่ยนข้อมูลหลักสูตรระหว่างโรงเรียนในสังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด เพื่อเสริมข้อมูลที่ขาดหายจากระบบสารสนเทศกลาง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.7.5</span><span class="way-t">จัดทำรายงานสถานะหลักสูตรประจำภาคเรียนโดยอิงข้อมูลจากการวิเคราะห์ภายในสถานศึกษา นำเสนอต่อคณะกรรมการสถานศึกษาและสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">1.8</span><div><div class="acc-title">ยกระดับความทันสมัยของหลักสูตรโดยใช้จุดแข็งด้านครูตรงสาขาและผลสัมฤทธิ์ผู้เรียน รับมือกับข้อจำกัดสารสนเทศ</div><div class="acc-swot">S4,S5,S6 × T1</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">1.8.1</span><span class="way-t">ใช้ผลสัมฤทธิ์ผู้เรียนที่สูงกว่าเกณฑ์เป็นหลักฐานเชิงประจักษ์ยืนยันคุณภาพหลักสูตรสถานศึกษา แม้ระบบสารสนเทศภายนอกยังมีข้อจำกัด</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.8.2</span><span class="way-t">ส่งเสริมให้ครูที่สอนตรงวุฒิและความถนัดพัฒนาระบบข้อมูลเฉพาะสาขาภายในโรงเรียน สร้างคลังข้อมูลหลักสูตรที่มีความน่าเชื่อถือสูง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.8.3</span><span class="way-t">ทบทวนและปรับปรุงความทันสมัยของหลักสูตรโดยใช้ความเชี่ยวชาญของครูและผลสัมฤทธิ์ผู้เรียนเป็นตัวชี้วัดหลัก ไม่ต้องรอข้อมูลจากระบบภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">1.8.4</span><span class="way-t">บันทึกและเผยแพร่นวัตกรรมหลักสูตรที่ประสบความสำเร็จเป็นเอกสารวิชาการภายในสถานศึกษา เพื่อสร้างองค์ความรู้ที่ยั่งยืนและเป็นอิสระจากระบบสารสนเทศภายนอก</span></div>
+</div></div></div>
+</div></div>
+<div id="g1-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">1 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">1.9</span><div><div class="acc-title">พัฒนาระบบข้อมูลหลักสูตรภายในสถานศึกษาเพื่อลดจุดอ่อนด้านโครงสร้างสมรรถนะและเจตคติผู้เรียน พร้อมรับมือกับข้อจำกัดระบบสารสนเทศ</div><div class="acc-swot">W1,W2,W3 × T1</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">1.9.1</span><span class="way-t">พัฒนาระบบรวบรวมข้อมูลปฐมภูมิจากครู ผู้เรียน และผู้ปกครองโดยตรง เพื่อสร้างฐานข้อมูลหลักสูตรที่เชื่อถือได้</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">1.9.2</span><span class="way-t">สร้างกลไกทบทวนหลักสูตรที่ไม่พึ่งพาระบบสารสนเทศภายนอก โดยใช้ข้อมูลจากครูประจำวิชาและผลสัมฤทธิ์ผู้เรียนเป็นตัวชี้วัดหลักในการพิจารณาปรับปรุง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">1.9.3</span><span class="way-t">จัดกระบวนการสะท้อนคิดเชิงวิพากษ์กับครูทุกกลุ่มสาระอย่างน้อยภาคเรียนละ 1 ครั้ง เพื่อประเมินความสอดคล้องของหลักสูตรกับสมรรถนะผู้เรียนที่ต้องการ</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">1.9.4</span><span class="way-t">พัฒนาระบบสังเกตและบันทึกพฤติกรรมผู้เรียนโดยครูประจำชั้น เพื่อแก้ไขจุดอ่อนด้านเจตคติของผู้เรียนต่อการศึกษา และออกแบบกิจกรรมในหลักสูตรที่สร้างแรงจูงใจได้ตรงจุด</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">1.9.5</span><span class="way-t">บันทึกและจัดเก็บผลการทบทวนหลักสูตรในรูปแบบที่เข้าถึงง่ายและไม่ต้องพึ่งพาระบบสารสนเทศซับซ้อน เพื่อให้ครูทุกคนนำไปใช้ประโยชน์ได้ทันที</span></div>
+</div></div></div>
+</div></div>
+</div>
+<div id="panel-g2" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#10b981">G2</div><div><div class="det-eyebrow" style="color:#10b981">กลยุทธ์หลักที่ 2 · S×O</div><h2 class="det-title">พลิกโฉมการจัดการเรียนรู้เชิงนวัตกรรมสู่มาตรฐานคุณภาพผู้เรียนในศตวรรษที่ 21</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.1674 · ภายนอก = 0.1955</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#10b981">8</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#10b981">40</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#065f46">S</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#1d4ed8">O</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการส่งเสริมให้จัดกิจกรรมสอนซ่อมเสริมเพื่อพัฒนาผู้เรียนที่มีผลการเรียนต่ำกว่าเกณฑ์</td><td><div class="mini-bar"><div class="mini-fill" style="width:50%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1511</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการสนับสนุนทรัพยากรและสิ่งอำนวยความสะดวกในการจัดการเรียนการสอน</td><td><div class="mini-bar"><div class="mini-fill" style="width:51%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1538</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูมีการพัฒนานวัตกรรมหรือวิธีการสอนที่ส่งเสริมทักษะสำคัญของผู้เรียนในศตวรรษที่ 21</td><td><div class="mini-bar"><div class="mini-fill" style="width:52%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1571</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการส่งเสริมให้จัดกิจกรรมการเรียนรู้ที่หลากหลายและสอดคล้องกับเป้าหมายการเรียนรู้</td><td><div class="mini-bar"><div class="mini-fill" style="width:53%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1584</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ผู้เรียนมีคุณธรรม จริยธรรม และคุณลักษณะอันพึงประสงค์ตามที่สถานศึกษากำหนด</td><td><div class="mini-bar"><div class="mini-fill" style="width:55%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1640</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการส่งเสริมให้ออกแบบและจัดทำแผนการจัดการเรียนรู้ที่หลากหลายและเหมาะสมกับผู้เรียน</td><td><div class="mini-bar"><div class="mini-fill" style="width:57%;background:#10b981"></div></div></td><td class="pni-val" style="color:#10b981">0.1718</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ครูได้รับการยอมรับนับถือจากผลการจัดการเรียนรู้ที่มีคุณภาพ</td><td><div class="mini-bar"><div class="mini-fill" style="width:59%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1767</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนมีการจัดการเรียนการสอนที่ทันสมัยสอดคล้องกับสภาพแวดล้อมที่เปลี่ยนแปลง</td><td><div class="mini-bar"><div class="mini-fill" style="width:60%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1801</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีผลสัมฤทธิ์ทางการเรียนสูงขึ้นกว่าปีการศึกษาที่ผ่านมา</td><td><div class="mini-bar"><div class="mini-fill" style="width:65%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1956</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g2','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">3 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g2','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g2','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g2','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">1 กลยุทธ์รอง</small></button>
+</div>
+<div id="g2-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">3 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">2.1</span><div><div class="acc-title">พลิกโฉมการจัดการเรียนรู้สู่นวัตกรรมโดยใช้กระบวนการ PLC และนโยบาย Active Learning</div><div class="acc-swot">S9,S10 × O10,O12</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.1.1</span><span class="way-t">จัดอบรมเชิงปฏิบัติการ Active Learning แก่ครูทุกกลุ่มสาระ โดยวิทยากรผู้เชี่ยวชาญจากสถาบันอุดมศึกษาในพื้นที่ ภาคเรียนละ 1 ครั้ง พร้อมกำหนดเป้าหมายการนำไปใช้ในชั้นเรียน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.1.2</span><span class="way-t">จัดตั้งกลุ่ม PLC แยกตามกลุ่มสาระการเรียนรู้ มีการประชุมแลกเปลี่ยนเรียนรู้อย่างสม่ำเสมออย่างน้อยเดือนละ 2 ครั้ง ใช้แนวทาง PLC จากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ดเป็นกรอบดำเนินงาน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.1.3</span><span class="way-t">กำหนดให้ครูทุกคนออกแบบแผนการจัดการเรียนรู้แบบ Active Learning อย่างน้อยร้อยละ 60 ของชั่วโมงสอนต่อภาคเรียน และนำเสนอแผนในกลุ่ม PLC เพื่อรับข้อเสนอแนะก่อนนำไปใช้</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.1.4</span><span class="way-t">สร้างเวทีแลกเปลี่ยนนวัตกรรมการสอนระหว่างครูในโรงเรียนและเครือข่ายโรงเรียนในสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด ภาคเรียนละ 1 ครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.1.5</span><span class="way-t">ติดตามและประเมินผลการใช้ Active Learning โดยเปรียบเทียบผลสัมฤทธิ์และความพึงพอใจของผู้เรียนก่อนและหลังการดำเนินการ แล้วนำผลมาปรับแผนในรอบถัดไป</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">2.2</span><div><div class="acc-title">พัฒนาระบบสนับสนุนการสอนซ่อมเสริมและสภาพแวดล้อมการเรียนรู้เชิงนวัตกรรมโดยใช้แนวทางฟื้นฟูการเรียนรู้และนโยบายโรงเรียนคุณภาพ</div><div class="acc-swot">S7,S8 × O9,O11</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.2.1</span><span class="way-t">จัดทำระบบคัดกรองผู้เรียนที่ต้องการความช่วยเหลือเป็นรายบุคคล โดยใช้ผลการประเมินในชั้นเรียนและแบบสำรวจภาวะถดถอยการเรียนรู้ที่มีมาตรฐาน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.2.2</span><span class="way-t">จัดสรรงบประมาณและทรัพยากรสนับสนุนการจัดสอนซ่อมเสริมให้ครูอย่างเพียงพอ ทั้งในด้านสื่อการสอน เวลาพิเศษ และสถานที่ ตามเกณฑ์โรงเรียนคุณภาพ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.2.3</span><span class="way-t">นำแนวทางการฟื้นฟูภาวะถดถอยทางการเรียนรู้จากหน่วยงานภายนอกมาออกแบบกิจกรรมฟื้นฟูที่หลากหลายและยืดหยุ่น ทั้งรูปแบบกลุ่มย่อย รายบุคคล และออนไลน์</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.2.4</span><span class="way-t">พัฒนาสภาพแวดล้อมการเรียนรู้ภายในสถานศึกษาให้สอดคล้องกับเกณฑ์โรงเรียนคุณภาพ โดยใช้ทรัพยากรและสิ่งอำนวยความสะดวกที่ได้รับการสนับสนุนอย่างเต็มประสิทธิภาพ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.2.5</span><span class="way-t">กำหนดตัวชี้วัดความสำเร็จของการสอนซ่อมเสริมที่ชัดเจน และรายงานผลต่อผู้ปกครองทุกภาคเรียน</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">2.3</span><div><div class="acc-title">เสริมสร้างคุณธรรมจริยธรรมและบูรณาการความร่วมมือกับสถานประกอบการในการจัดการเรียนรู้เชิงประสบการณ์อาชีพ</div><div class="acc-swot">S11,S12 × O8,O13</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.3.1</span><span class="way-t">กำหนดแผนบูรณาการคุณธรรมจริยธรรมในแผนการจัดการเรียนรู้ทุกกลุ่มสาระ โดยระบุพฤติกรรมที่คาดหวังและวิธีการประเมินที่ชัดเจน สอดคล้องกับมาตรการส่งเสริมคุณธรรมจากหน่วยงานภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.3.2</span><span class="way-t">จัดทำฐานข้อมูลสถานประกอบการในจังหวัดร้อยเอ็ดที่พร้อมให้ความร่วมมือในการจัดการเรียนรู้ และทำบันทึกข้อตกลงความร่วมมือ (MOU) อย่างเป็นทางการ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.3.3</span><span class="way-t">ออกแบบหน่วยการเรียนรู้แบบ Work-based Learning โดยให้ผู้เรียนได้เรียนรู้จากสถานการณ์จริงในสถานประกอบการ อย่างน้อยภาคเรียนละ 1 หน่วย ผ่านแผนการจัดการเรียนรู้ที่ครูออกแบบไว้</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.3.4</span><span class="way-t">เชิญผู้เชี่ยวชาญจากสถานประกอบการมาร่วมสอนในชั้นเรียน แลกเปลี่ยนประสบการณ์วิชาชีพจริง และช่วยออกแบบกิจกรรมการเรียนรู้ที่สะท้อนโลกการทำงาน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">2.3.5</span><span class="way-t">ติดตามและประเมินคุณลักษณะอันพึงประสงค์ผู้เรียนควบคู่กับผลการเรียนรู้เชิงอาชีพ เพื่อยืนยันว่าการบูรณาการคุณธรรมและประสบการณ์อาชีพส่งผลดีต่อผู้เรียนอย่างรอบด้าน</span></div>
+</div></div></div>
+</div></div>
+<div id="g2-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">2.4</span><div><div class="acc-title">พลิกโฉมการจัดการเรียนการสอนสู่นวัตกรรมการเรียนรู้ที่ทันสมัยโดยใช้นโยบาย PLC และโรงเรียนคุณภาพ</div><div class="acc-swot">W4,W5 × O9,O10</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">2.4.1</span><span class="way-t">วิเคราะห์ช่องว่างระหว่างวิธีการสอนปัจจุบันของครูแต่ละคนกับมาตรฐานโรงเรียนคุณภาพที่กระทรวงกำหนด แล้วจัดทำแผนพัฒนาการสอนรายบุคคล</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.4.2</span><span class="way-t">จัดอบรม Coaching การสอนแบบเน้นการปฏิบัติจริงในชั้นเรียน ผ่านกระบวนการ PLC จากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด พร้อมระบบนิเทศติดตามการนำไปใช้อย่างสม่ำเสมอ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.4.3</span><span class="way-t">กำหนดให้โรงเรียนดำเนินการตามเกณฑ์โรงเรียนคุณภาพในด้านการจัดการเรียนการสอน โดยมีแผนปฏิบัติการที่ชัดเจนและวัดผลได้จริงในแต่ละตัวชี้วัด</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.4.4</span><span class="way-t">สร้างระบบยกย่องชมเชยครูที่นำเสนอผลงานการสอนที่โดดเด่นในกระบวนการ PLC เพื่อสร้างการยอมรับและแรงจูงใจในการพัฒนาการสอนอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.4.5</span><span class="way-t">ประเมินผลการพลิกโฉมการสอนโดยเปรียบเทียบผลสัมฤทธิ์ผู้เรียน ความพึงพอใจ และทักษะศตวรรษที่ 21 ก่อนและหลังดำเนินการ</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">2.5</span><div><div class="acc-title">ยกระดับผลสัมฤทธิ์ทางการเรียนโดยใช้โอกาสจากแนวทางฟื้นฟูการเรียนรู้และความร่วมมือกับสถานประกอบการ</div><div class="acc-swot">W6 × O8,O11</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">2.5.1</span><span class="way-t">ดำเนินการคัดกรองผู้เรียนที่มีภาวะถดถอยทางการเรียนรู้โดยใช้เครื่องมือวินิจฉัยมาตรฐาน จำแนกระดับความรุนแรงและออกแบบแผนฟื้นฟูรายบุคคล</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.5.2</span><span class="way-t">นำแนวทางการฟื้นฟูภาวะถดถอยการเรียนรู้จากหน่วยงานภายนอกมาปรับใช้ในบริบทจริงของสถานศึกษา โดยจัดกิจกรรมฟื้นฟูทั้งระหว่างเรียนและหลังเลิกเรียน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.5.3</span><span class="way-t">ประสานสถานประกอบการในพื้นที่ให้จัดกิจกรรม Career Talk หรือ Mini Internship เพื่อสร้างแรงจูงใจและเห็นคุณค่าของการเรียนรู้ในกลุ่มผู้เรียนที่มีผลสัมฤทธิ์ต่ำ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.5.4</span><span class="way-t">กำหนดตัวชี้วัดการยกระดับผลสัมฤทธิ์ที่ชัดเจน เช่น ร้อยละผู้เรียนที่ผ่านเกณฑ์ขั้นต่ำเพิ่มขึ้นภาคเรียนละไม่ต่ำกว่าร้อยละ 5 และรายงานผลต่อผู้ปกครอง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">2.5.5</span><span class="way-t">สรุปและเผยแพร่แนวปฏิบัติที่ดีในการยกระดับผลสัมฤทธิ์ผู้เรียนเพื่อให้ครูในโรงเรียนอื่นนำไปใช้ต่อ</span></div>
+</div></div></div>
+</div></div>
+<div id="g2-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">2.6</span><div><div class="acc-title">ขับเคลื่อนนวัตกรรมการสอนของครูเพื่อรับมือกับข้อจำกัดทรัพยากรชุมชนและการเปลี่ยนแปลงเทคโนโลยี</div><div class="acc-swot">S7,S8 × T2</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">2.6.1</span><span class="way-t">ใช้การสอนซ่อมเสริมและทรัพยากรสนับสนุนที่มีอยู่ภายในสถานศึกษาออกแบบกิจกรรมพัฒนาผู้เรียนได้โดยไม่ต้องรอการสนับสนุนทรัพยากรจากผู้ปกครองและชุมชน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.6.2</span><span class="way-t">สร้างคลังสื่อดิจิทัลภายในสถานศึกษา ให้ครูทุกคนนำสื่อที่สร้างมาแบ่งปันกัน ลดภาระการสร้างซ้ำและลดต้นทุน แม้ทรัพยากรจากชุมชนยังจำกัด</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.6.3</span><span class="way-t">ออกแบบกิจกรรมการเรียนรู้ที่ใช้ทรัพยากรภายในสถานศึกษาเป็นหลัก โดยใช้แนวคิด Project-based Learning ที่ไม่ต้องพึ่งพาทรัพยากรภายนอกมากเกินไป</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.6.4</span><span class="way-t">จัดทำแผนการสอนแบบ Hybrid ที่สามารถดำเนินได้ทั้ง online และ offline รองรับการเปลี่ยนแปลงของเทคโนโลยีดิจิทัล</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.6.5</span><span class="way-t">สร้างแรงจูงใจให้ครูพัฒนานวัตกรรมการสอนต้นทุนต่ำโดยมีระบบยกย่องชมเชยและนำเสนอผลงานในเวทีวิชาการ</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">2.7</span><div><div class="acc-title">เสริมสร้างคุณลักษณะดิจิทัลผู้เรียนผ่านการเรียนรู้ที่หลากหลาย รับมือกับเทคโนโลยีที่เปลี่ยนแปลงเร็ว</div><div class="acc-swot">S9,S10,S11 × T3,T4</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">2.7.1</span><span class="way-t">ส่งเสริมให้ครูพัฒนานวัตกรรมและวิธีการสอนที่ส่งเสริมทักษะสำคัญของผู้เรียนในศตวรรษที่ 21 โดยใช้สื่อต้นทุนต่ำที่ปรับเปลี่ยนได้ตามความก้าวหน้าของเทคโนโลยี</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.7.2</span><span class="way-t">ออกแบบกิจกรรมการเรียนรู้ที่หลากหลายรูปแบบและสอดคล้องกับเป้าหมายการเรียนรู้ เพื่อไม่ต้องพึ่งพาเทคโนโลยีใดเทคโนโลยีหนึ่งเพียงอย่างเดียว</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.7.3</span><span class="way-t">บูรณาการการพัฒนาคุณธรรม จริยธรรม และคุณลักษณะอันพึงประสงค์ของผู้เรียนเข้ากับการใช้เทคโนโลยี เพื่อให้ผู้เรียนใช้เทคโนโลยีอย่างรับผิดชอบและสร้างสรรค์</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.7.4</span><span class="way-t">ออกแบบกิจกรรมการเรียนรู้ทั้ง online และ offline ให้ผู้เรียนทุกคนสามารถเข้าถึงการเรียนรู้ได้อย่างทั่วถึง แม้แพลตฟอร์มดิจิทัลจะเข้าถึงไม่เท่าเทียมกัน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">2.7.5</span><span class="way-t">ติดตามและประเมินความสามารถในการปรับตัวต่อเทคโนโลยีที่เปลี่ยนแปลงของทั้งครูและผู้เรียนทุกภาคเรียน</span></div>
+</div></div></div>
+</div></div>
+<div id="g2-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">1 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">2.8</span><div><div class="acc-title">สร้างระบบพัฒนาวิชาชีพครูและยกระดับผลสัมฤทธิ์ผู้เรียนภายใต้ข้อจำกัดทรัพยากรชุมชนและเทคโนโลยี</div><div class="acc-swot">W4,W5,W6 × T2,T3,T4</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">2.8.1</span><span class="way-t">สร้างระบบยกย่องครูที่นำเทคโนโลยีมาใช้สอนได้อย่างมีประสิทธิภาพ เพื่อสร้างแรงจูงใจให้ครูพัฒนาสมรรถนะดิจิทัลอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">2.8.2</span><span class="way-t">พัฒนาสมรรถนะดิจิทัลครูควบคู่กับการจัดหาช่องทางเข้าถึงเทคโนโลยีพื้นฐานที่ครอบคลุมทุกห้องเรียน เพื่อแก้ไขจุดอ่อนด้านการสอนที่ขาดความทันสมัยภายใต้ข้อจำกัดแพลตฟอร์มดิจิทัล</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">2.8.3</span><span class="way-t">ออกแบบกิจกรรมการเรียนรู้ที่ผู้เรียนสามารถทำได้ด้วยทรัพยากรที่มีอยู่จริง เน้นการคิดวิเคราะห์และแก้ปัญหาจริงในชีวิต ลดการพึ่งพาอุปกรณ์ดิจิทัลราคาแพง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">2.8.4</span><span class="way-t">ประสานองค์การปกครองส่วนท้องถิ่นและองค์กรภายนอกในการระดมทรัพยากรช่วยเหลือผู้เรียนที่ขาดโอกาสอย่างเป็นรูปธรรมและต่อเนื่อง เพื่อยกระดับผลสัมฤทธิ์ที่ยังต้องพัฒนา</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">2.8.5</span><span class="way-t">กำหนดเป้าหมายยกระดับผลสัมฤทธิ์ที่เป็นไปได้จริงตามบริบทของสถานศึกษา โดยเน้นการพัฒนาอย่างค่อยเป็นค่อยไปแต่ต่อเนื่อง วัดผลได้ชัดเจนทุกภาคเรียน</span></div>
+</div></div></div>
+</div></div>
+</div>
+<div id="panel-g3" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#f59e0b">G3</div><div><div class="det-eyebrow" style="color:#f59e0b">กลยุทธ์หลักที่ 3 · W×O</div><h2 class="det-title">ปฏิรูประบบการวัดและประเมินผลการเรียนรู้ฐานสมรรถนะเพื่อยกระดับคุณภาพผู้เรียนรายบุคคล</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.1914 · ภายนอก = 0.2091</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#f59e0b">7</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#f59e0b">34</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#991b1b">W</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#1d4ed8">O</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการส่งเสริมให้ใช้การวัดและประเมินผลตามสภาพจริงที่สอดคล้องกับสมรรถนะของผู้เรียน</td><td><div class="mini-bar"><div class="mini-fill" style="width:57%;background:#f59e0b"></div></div></td><td class="pni-val" style="color:#f59e0b">0.1724</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนนำเทคโนโลยีมาใช้ในการบริหารจัดการงานวัดและประเมินผลการเรียนรู้</td><td><div class="mini-bar"><div class="mini-fill" style="width:62%;background:#f59e0b"></div></div></td><td class="pni-val" style="color:#f59e0b">0.1849</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีหลักฐานว่าการนำผลประเมินไปพัฒนาการสอนทำให้คุณภาพผู้เรียนดีขึ้น</td><td><div class="mini-bar"><div class="mini-fill" style="width:62%;background:#f59e0b"></div></div></td><td class="pni-val" style="color:#f59e0b">0.1859</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีการกำหนดวัตถุประสงค์การวัดผลที่ครอบคลุมพฤติกรรมการเรียนรู้ทั้ง 3 ด้าน</td><td><div class="mini-bar"><div class="mini-fill" style="width:63%;background:#f59e0b"></div></div></td><td class="pni-val" style="color:#f59e0b">0.1886</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีเจตคติที่ดีต่อการเรียนรู้จากกระบวนการประเมินที่เป็นธรรม</td><td><div class="mini-bar"><div class="mini-fill" style="width:64%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1930</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนนำผลการประเมินคุณภาพมาปรับเปลี่ยนแนวทางการบริหารงานวิชาการต่อเนื่อง</td><td><div class="mini-bar"><div class="mini-fill" style="width:64%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1933</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนนำผลการประเมินมาพัฒนาผลการเรียนรู้ของผู้เรียนเป็นรายบุคคล</td><td><div class="mini-bar"><div class="mini-fill" style="width:67%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2003</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ระบบการวัดและประเมินผลช่วยให้ครูพัฒนาการสอนได้อย่างมีทิศทาง</td><td><div class="mini-bar"><div class="mini-fill" style="width:71%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2119</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g3','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g3','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g3','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g3','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">1 กลยุทธ์รอง</small></button>
+</div>
+<div id="g3-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">3.1</span><div><div class="acc-title">ปฏิรูประบบการวัดและประเมินผลฐานสมรรถนะที่สอดคล้องกับแนวทางของกระทรวงศึกษาธิการ</div><div class="acc-swot">S13,S16 × O14</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.1.1</span><span class="way-t">จัดอบรมครูให้มีความรู้และทักษะในการออกแบบเครื่องมือวัดและประเมินผลฐานสมรรถนะ โดยวิทยากรผู้เชี่ยวชาญ ครอบคลุมทั้งการประเมินความรู้ ทักษะ และเจตคติ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.1.2</span><span class="way-t">พัฒนาคลังเครื่องมือวัดประเมินผลฐานสมรรถนะร่วมกันในกลุ่มสาระ ได้แก่ แบบทดสอบ Rubric ใบงาน และแฟ้มสะสมผลงาน โดยอ้างอิงแนวทางการประเมินฐานสมรรถนะของกระทรวงศึกษาธิการ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.1.3</span><span class="way-t">กำหนดตารางการวัดประเมินผลประจำปีการศึกษาที่ครอบคลุมพฤติกรรมการเรียนรู้ครบ 3 ด้าน และแจ้งให้ผู้เรียนและผู้ปกครองทราบล่วงหน้า</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.1.4</span><span class="way-t">นิเทศและให้ข้อเสนอแนะการใช้เครื่องมือวัดประเมินผลฐานสมรรถนะของครูอย่างสม่ำเสมอ และปรับปรุงเครื่องมือให้ทันสมัยทุกปีการศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.1.5</span><span class="way-t">รายงานผลการวัดประเมินผลฐานสมรรถนะต่อสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด และนำข้อเสนอแนะจากเขตพื้นที่มาพัฒนาระบบในรอบถัดไป</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">3.2</span><div><div class="acc-title">เสริมสร้างระบบนำเทคโนโลยีและหลักฐานการประเมินมาพัฒนาคุณภาพการสอนตามแนวทาง Assessment for Learning และภูมิปัญญาท้องถิ่น</div><div class="acc-swot">S14,S15 × O15,O16,O17</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.2.1</span><span class="way-t">นำเทคโนโลยีสารสนเทศมาใช้ในการรวบรวม วิเคราะห์ และรายงานผลการประเมิน โดยพัฒนาระบบฐานข้อมูลผลการเรียนรู้รายบุคคลที่ครูและผู้ปกครองเข้าถึงได้</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.2.2</span><span class="way-t">นำหลักการ Assessment for Learning มาใช้ต่อยอดจากหลักฐานการนำผลประเมินไปพัฒนาการสอนที่มีอยู่ เพื่อสร้างระบบการประเมินเพื่อพัฒนาอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.2.3</span><span class="way-t">บูรณาการแหล่งเรียนรู้และภูมิปัญญาท้องถิ่นในการออกแบบเครื่องมือวัดประเมินผลแบบบูรณาการ ให้ผู้เรียนนำความรู้ไปใช้แก้ปัญหาจริงในชุมชน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.2.4</span><span class="way-t">นำข้อเสนอแนะจากผู้ปกครองและชุมชนเกี่ยวกับผลการประเมินมาวิเคราะห์ร่วมกับข้อมูลเชิงปริมาณ เพื่อให้ได้ภาพรวมคุณภาพผู้เรียนที่รอบด้าน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">3.2.5</span><span class="way-t">จัดประชุมสรุปผลการประเมินรายภาคเรียนกับผู้ปกครองและชุมชน เพื่อร่วมกันวางแผนพัฒนาผู้เรียนอย่างต่อเนื่องและยั่งยืน</span></div>
+</div></div></div>
+</div></div>
+<div id="g3-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">3.3</span><div><div class="acc-title">ปฏิรูประบบวัดและประเมินผลสู่แนวทาง Assessment for Learning โดยใช้โอกาสจากนโยบายกระทรวงศึกษาธิการ</div><div class="acc-swot">W7,W10 × O14,O15</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">3.3.1</span><span class="way-t">จัดอบรมเชิงปฏิบัติการให้ครูเข้าใจหลักการ Assessment for Learning (AfL) ที่เน้นการประเมินเพื่อพัฒนาไม่ใช่เพื่อตัดสิน พร้อมฝึกทักษะการให้ข้อมูลป้อนกลับเชิงบวก</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.3.2</span><span class="way-t">ออกแบบระบบการประเมินในชั้นเรียนที่เปิดโอกาสให้ผู้เรียนประเมินตนเองและประเมินเพื่อนร่วมชั้น (Self-assessment and Peer-assessment) อย่างสม่ำเสมอ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.3.3</span><span class="way-t">พัฒนาเครื่องมือวัดประเมินผลฐานสมรรถนะตามแนวทางกระทรวงศึกษาธิการ ครอบคลุม Rubric การประเมินทักษะ การประเมินทัศนคติ และแฟ้มสะสมผลงาน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.3.4</span><span class="way-t">สร้างระบบวัดประเมินผลที่ให้ข้อมูลป้อนกลับแก่ครูอย่างรวดเร็ว เพื่อให้ครูปรับวิธีการสอนได้ทันสถานการณ์การเรียนรู้จริงของผู้เรียน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.3.5</span><span class="way-t">ประเมินความพึงพอใจของผู้เรียนต่อกระบวนการประเมินทุกภาคเรียน และนำผลมาปรับรูปแบบการประเมินให้มีความเป็นธรรมและน่าเชื่อถือยิ่งขึ้น</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">3.4</span><div><div class="acc-title">พัฒนาระบบนำผลการประเมินมาพัฒนาผู้เรียนรายบุคคลและปรับปรุงการบริหารวิชาการโดยใช้ทรัพยากรชุมชนและภูมิปัญญาท้องถิ่น</div><div class="acc-swot">W8,W9 × O14,O16,O17</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">3.4.1</span><span class="way-t">สร้างระบบฐานข้อมูลผลการเรียนรู้รายบุคคล (Individual Learning Profile) ที่ครูสามารถบันทึกและวิเคราะห์พัฒนาการของผู้เรียนแต่ละคนได้อย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.4.2</span><span class="way-t">กำหนดกระบวนการวิเคราะห์ผลการประเมินระดับกลุ่มสาระทุกภาคเรียน โดยระบุแนวโน้ม จุดอ่อนของหลักสูตร และประเด็นที่ต้องปรับปรุงการบริหารวิชาการ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.4.3</span><span class="way-t">นำข้อเสนอแนะจากผู้ปกครองและชุมชนเกี่ยวกับผลการเรียนรู้ผู้เรียนมาวิเคราะห์ร่วมกับข้อมูลเชิงปริมาณ เพื่อจัดทำแผนพัฒนาผู้เรียนรายบุคคลที่ครอบคลุมทุกมิติ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.4.4</span><span class="way-t">บูรณาการแหล่งเรียนรู้และภูมิปัญญาท้องถิ่นในการออกแบบกิจกรรมพัฒนาผู้เรียนรายบุคคลที่สอดคล้องกับบริบทชุมชน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">3.4.5</span><span class="way-t">รายงานผลการพัฒนาผู้เรียนรายบุคคลต่อผู้ปกครองอย่างสม่ำเสมอ พร้อมข้อเสนอแนะในการส่งเสริมการเรียนรู้ที่บ้าน เพื่อสร้างความร่วมมือระหว่างโรงเรียนและครอบครัว</span></div>
+</div></div></div>
+</div></div>
+<div id="g3-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">3.5</span><div><div class="acc-title">เสริมสร้างระบบการวัดประเมินผลที่เป็นธรรมรับมือกับข้อจำกัดทางเศรษฐกิจผู้เรียนและนโยบายยกระดับผลสัมฤทธิ์</div><div class="acc-swot">S13,S15 × T5,T6</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">3.5.1</span><span class="way-t">ออกแบบการวัดประเมินผลตามสภาพจริงที่ยืดหยุ่นและหลากหลายรูปแบบ ไม่ผูกติดกับอุปกรณ์ราคาแพง เพื่อให้ผู้เรียนทุกฐานะเศรษฐกิจแสดงสมรรถนะได้อย่างเต็มที่</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.5.2</span><span class="way-t">ใช้หลักฐานการเรียนรู้หลายรูปแบบ เช่น Portfolio ชิ้นงาน การนำเสนอ และการสังเกต เพื่อสะท้อนคุณภาพผู้เรียนอย่างครอบคลุมโดยไม่ขึ้นกับฐานะทางเศรษฐกิจ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.5.3</span><span class="way-t">นำหลักฐานว่าการนำผลประเมินไปพัฒนาการสอนทำให้คุณภาพผู้เรียนดีขึ้น มาวิเคราะห์ร่วมกับนโยบายยกระดับผลสัมฤทธิ์จากเขตพื้นที่ เพื่อสร้างแผนยกระดับที่มีหลักฐานรองรับ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.5.4</span><span class="way-t">จัดระบบสนับสนุนผู้เรียนที่มีข้อจำกัดทางเศรษฐกิจในการเข้ารับการประเมิน เช่น จัดสถานที่ อุปกรณ์ และเวลาที่เหมาะสม เพื่อความเป็นธรรมทางการศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.5.5</span><span class="way-t">รายงานผลการวัดประเมินผลเชิงสมรรถนะต่อสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด พร้อมแผนยกระดับที่ชัดเจนและวัดผลได้</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">3.6</span><div><div class="acc-title">พัฒนาระบบวัดประเมินผลดิจิทัลภายในสถานศึกษาเพื่อรับมือกับข้อจำกัดของระบบสารสนเทศและแพลตฟอร์มภายนอก</div><div class="acc-swot">S14,S16 × T7,T8</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">3.6.1</span><span class="way-t">นำเทคโนโลยีที่โรงเรียนมีอยู่มาใช้ในการบริหารจัดการงานวัดและประเมินผลการเรียนรู้ พัฒนาระบบฐานข้อมูลการประเมินภายในสถานศึกษาโดยไม่ต้องพึ่งพาแพลตฟอร์มราคาแพง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.6.2</span><span class="way-t">ออกแบบระบบประเมินออนไลน์ภายในที่ใช้งานได้ทั้ง online และ offline รองรับผู้เรียนในพื้นที่ที่มีข้อจำกัดการเข้าถึงอินเทอร์เน็ต</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.6.3</span><span class="way-t">ฝึกครูให้ใช้เทคโนโลยีพื้นฐานในการรวบรวมและวิเคราะห์ผลการประเมิน โดยไม่ต้องรอระบบสารสนเทศจากภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">3.6.4</span><span class="way-t">กำหนดวัตถุประสงค์การวัดผลครบ 3 ด้านในทุกรายวิชา และพัฒนาเครื่องมือประเมินที่สอดคล้องกับแพลตฟอร์มที่โรงเรียนมีอยู่จริง เพื่อรับมือกับแพลตฟอร์มออนไลน์จากภายนอกที่มีข้อจำกัด</span></div>
+</div></div></div>
+</div></div>
+<div id="g3-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">1 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">3.7</span><div><div class="acc-title">สร้างระบบการวัดประเมินผลที่เป็นธรรมและมีประสิทธิภาพภายใต้ข้อจำกัดด้านเศรษฐกิจผู้เรียนและระบบสารสนเทศ</div><div class="acc-swot">W7-W10 × T5-T8</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">3.7.1</span><span class="way-t">ออกแบบการประเมินที่ยืดหยุ่น เข้าถึงง่าย และไม่เพิ่มภาระทางเศรษฐกิจผู้เรียน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">3.7.2</span><span class="way-t">พัฒนาระบบติดตามผู้เรียนรายบุคคลภายในสถานศึกษาโดยใช้แบบบันทึกที่ออกแบบเอง ไม่ต้องพึ่งระบบสารสนเทศราคาแพง สามารถสรุปพัฒนาการผู้เรียนได้ทุกภาคเรียน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">3.7.3</span><span class="way-t">พัฒนาระบบวิเคราะห์และรายงานผลการประเมินที่ตอบสนองนโยบายยกระดับผลสัมฤทธิ์จากเขตพื้นที่ได้อย่างชัดเจนและวัดผลได้จริง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">3.7.4</span><span class="way-t">ออกแบบระบบประเมินออนไลน์ภายในที่เข้าถึงง่าย ใช้งานได้จริง และให้ข้อมูลป้อนกลับที่เป็นประโยชน์ต่อการพัฒนาการสอน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">3.7.5</span><span class="way-t">รายงานผลการพัฒนาระบบวัดประเมินผลต่อสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด พร้อมแผนยกระดับผลสัมฤทธิ์ที่สอดคล้องกับนโยบายและเป็นไปได้จริง</span></div>
+</div></div></div>
+</div></div>
+</div>
+<div id="panel-g4" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#ef4444">G4</div><div><div class="det-eyebrow" style="color:#ef4444">กลยุทธ์หลักที่ 4 · W×T</div><h2 class="det-title">พลิกโฉมระบบสื่อและเทคโนโลยีทางการศึกษาเพื่อเสริมสร้างสมรรถนะดิจิทัลของครูและผู้เรียน</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.2345 · ภายนอก = 0.2615</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#ef4444">7</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#ef4444">33</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#991b1b">W</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#92400e">T</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนสามารถนำนวัตกรรมและเทคโนโลยีใหม่มาปรับใช้ในการจัดการเรียนการสอนได้ทันการเปลี่ยนแปลง</td><td><div class="mini-bar"><div class="mini-fill" style="width:69%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2077</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีการจัดหาสื่อเทคโนโลยีที่ทันสมัยและผ่านการประเมินคุณภาพทางวิชาการ</td><td><div class="mini-bar"><div class="mini-fill" style="width:72%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2167</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ผู้เรียนมีผลสัมฤทธิ์ทางการเรียนสูงขึ้นจากการใช้สื่อเทคโนโลยีที่มีคุณภาพ</td><td><div class="mini-bar"><div class="mini-fill" style="width:73%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2192</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีการวางแผนและจัดสรรสื่อและเทคโนโลยีสารสนเทศเพื่อสนับสนุนครูอย่างทั่วถึง</td><td><div class="mini-bar"><div class="mini-fill" style="width:77%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2313</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีการติดตามและประเมินผลการใช้สื่อและเทคโนโลยีทางการศึกษาอย่างเป็นระบบ</td><td><div class="mini-bar"><div class="mini-fill" style="width:78%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2326</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีทักษะดิจิทัลในการเรียนรู้ผ่านสื่อเทคโนโลยี</td><td><div class="mini-bar"><div class="mini-fill" style="width:82%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2461</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ครูได้รับการพัฒนาสมรรถนะด้านเทคโนโลยีอย่างต่อเนื่องเพื่อนำไปใช้ในการจัดการเรียนรู้</td><td><div class="mini-bar"><div class="mini-fill" style="width:83%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2480</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ครูมีความพึงพอใจในการนำสื่อเทคโนโลยีไปใช้จัดการเรียนการสอน</td><td><div class="mini-bar"><div class="mini-fill" style="width:92%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2763</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g4','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g4','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g4','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g4','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">1 กลยุทธ์รอง</small></button>
+</div>
+<div id="g4-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">4.1</span><div><div class="acc-title">พลิกโฉมการพัฒนาสื่อและเทคโนโลยีดิจิทัลตามนโยบาย Anywhere Anytime</div><div class="acc-swot">S17,S21 × O18</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.1.1</span><span class="way-t">จัดทำแผนพัฒนาสื่อและเทคโนโลยีทางการศึกษาระยะ 3 ปี สอดคล้องกับนโยบายการเรียนรู้ได้ทุกที่ทุกเวลา (Anywhere Anytime) ของกระทรวง กำหนดเป้าหมาย งบประมาณ และผู้รับผิดชอบที่ชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.1.2</span><span class="way-t">พัฒนาระบบการเรียนรู้ที่ผู้เรียนเข้าถึงเนื้อหาได้ทุกที่ทุกเวลา โดยนำนวัตกรรมและเทคโนโลยีใหม่ที่โรงเรียนสามารถปรับใช้ได้ทันการเปลี่ยนแปลงมาเป็นฐานในการพัฒนาแพลตฟอร์มหลัก</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.1.3</span><span class="way-t">อบรมครูให้สามารถสร้างสื่อดิจิทัลที่ใช้งานได้ทั้ง online และ offline โดยใช้เครื่องมือที่ครูทุกคนเข้าถึงได้</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.1.4</span><span class="way-t">สร้างคลังสื่อดิจิทัลของสถานศึกษาแบ่งหมวดหมู่ตามกลุ่มสาระและระดับชั้น ให้ครูทุกคนสามารถนำไปใช้และแบ่งปันกันได้อย่างสะดวก</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.1.5</span><span class="way-t">นำระบบติดตามและประเมินผลการใช้สื่อและเทคโนโลยีที่มีอยู่มาตรวจสอบว่าการพัฒนาสอดคล้องกับนโยบาย Anywhere Anytime และปรับปรุงแผนพัฒนาในรอบถัดไป</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">4.2</span><div><div class="acc-title">เสริมสร้างระบบการจัดหาและบริหารสื่อเทคโนโลยีอย่างทั่วถึงโดยความร่วมมือกับภาคเอกชนและชุมชน</div><div class="acc-swot">S18,S19,S20 × O19,O20</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.2.1</span><span class="way-t">จัดทำฐานข้อมูลองค์กรเอกชนและชุมชนในจังหวัดร้อยเอ็ดที่พร้อมสนับสนุนสื่อและเทคโนโลยีทางการศึกษา และจัดทำบันทึกข้อตกลงความร่วมมือ (MOU) อย่างเป็นทางการ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.2.2</span><span class="way-t">วางแผนการจัดสรรสื่อและอุปกรณ์ดิจิทัลให้ครูทุกคนและทุกห้องเรียนอย่างทั่วถึง โดยจัดลำดับความสำคัญตามความต้องการและผลกระทบต่อผู้เรียน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.2.3</span><span class="way-t">นำผลสัมฤทธิ์ผู้เรียนที่เพิ่มขึ้นจากการใช้สื่อเทคโนโลยีที่มีคุณภาพมาเป็นหลักฐานในการขอรับการสนับสนุนจากภาคเอกชนและชุมชนเพิ่มเติม</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.2.4</span><span class="way-t">จัดหาสื่อเทคโนโลยีที่ทันสมัยและผ่านการประเมินคุณภาพทางวิชาการร่วมกับภาคเอกชน เพื่อให้มั่นใจว่าสื่อที่ได้รับมีมาตรฐานเหมาะสมกับการใช้งานจริง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">4.2.5</span><span class="way-t">จัดทำรายงานผลการใช้สื่อเทคโนโลยีต่อภาคีเครือข่ายทุกสิ้นปีการศึกษา เพื่อสร้างความน่าเชื่อถือและดำรงความสัมพันธ์ที่ดีกับผู้สนับสนุน</span></div>
+</div></div></div>
+</div></div>
+<div id="g4-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">4.3</span><div><div class="acc-title">พัฒนาทักษะดิจิทัลผู้เรียนและสมรรถนะดิจิทัลครูอย่างเป็นระบบโดยใช้นโยบาย Anywhere Anytime และความร่วมมือชุมชน</div><div class="acc-swot">W11,W12 × O18,O19</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">4.3.1</span><span class="way-t">กำหนดกรอบทักษะดิจิทัลที่ผู้เรียนทุกคนต้องมีในแต่ละระดับชั้น สอดคล้องกับนโยบาย Anywhere Anytime ของกระทรวง และบูรณาการในแผนการสอนทุกกลุ่มสาระ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.3.2</span><span class="way-t">จัดกิจกรรมพัฒนาทักษะดิจิทัลผู้เรียนทั้งในชั้นเรียนและนอกชั้นเรียนร่วมกับชุมชนและหน่วยงานภายนอก เช่น ชมรมดิจิทัล ค่ายโค้ดดิ้ง และโครงงานดิจิทัลชุมชน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.3.3</span><span class="way-t">ประเมินสมรรถนะดิจิทัลของครูทุกคนโดยใช้กรอบ DigComp หรือเกณฑ์ที่ สพฐ. กำหนด เพื่อจำแนกระดับสมรรถนะและวางแผนพัฒนารายบุคคล</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.3.4</span><span class="way-t">ประสานกับชุมชนและหน่วยงานภายนอกในการจัดหลักสูตรพัฒนาสมรรถนะดิจิทัลครูที่ตอบสนองความต้องการจริง โดยนำผู้เชี่ยวชาญจากภายนอกมาร่วมพัฒนาอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.3.5</span><span class="way-t">ติดตามและประเมินผลการพัฒนาทักษะดิจิทัลครูและผู้เรียนทุกภาคเรียน นำผลมาปรับแผนและรายงานต่อผู้บริหารและสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">4.4</span><div><div class="acc-title">ยกระดับความพึงพอใจครูในการใช้สื่อเทคโนโลยีโดยการสนับสนุนจากภาคเอกชน</div><div class="acc-swot">W13 × O20</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">4.4.1</span><span class="way-t">สำรวจความต้องการสื่อและอุปกรณ์เทคโนโลยีของครูทุกคน จำแนกตามลำดับความสำคัญและผลกระทบต่อการเรียนรู้ของผู้เรียน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.4.2</span><span class="way-t">เจรจาและจัดทำบันทึกข้อตกลงความร่วมมือ (MOU) กับภาคเอกชนในพื้นที่ร้อยเอ็ดเพื่อรับการสนับสนุนสื่อ อุปกรณ์ดิจิทัล และซอฟต์แวร์ที่ตรงกับความต้องการครู</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.4.3</span><span class="way-t">จัดอบรมการใช้สื่อและอุปกรณ์ที่ได้รับการสนับสนุนอย่างเป็นระบบ เน้นการใช้งานจริงในชั้นเรียนและการแก้ปัญหาเบื้องต้น</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">4.4.4</span><span class="way-t">สร้างชุมชนออนไลน์สำหรับครูในการแลกเปลี่ยนเทคนิคการใช้สื่อเทคโนโลยี รวมถึงช่องทางแจ้งปัญหาและขอความช่วยเหลือได้รวดเร็ว</span></div>
+</div></div></div>
+</div></div>
+<div id="g4-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">4.5</span><div><div class="acc-title">เสริมสร้างความสามารถปรับตัวด้านเทคโนโลยีของสถานศึกษาเพื่อรับมือกับโครงสร้างพื้นฐานและงบประมาณที่จำกัด</div><div class="acc-swot">S17,S20 × T11,T12</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">4.5.1</span><span class="way-t">พัฒนาสื่อการสอนที่ใช้งานได้ทั้ง online และ offline อย่างสมดุล โดยใช้ความสามารถในการปรับใช้นวัตกรรมและเทคโนโลยีใหม่ของโรงเรียน เพื่อให้ผู้เรียนเข้าถึงได้แม้ไม่มีอินเทอร์เน็ต</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.5.2</span><span class="way-t">จัดทำแผนการลงทุนด้านเทคโนโลยีระยะ 3 ปี โดยจัดลำดับความสำคัญตามผลกระทบต่อผู้เรียนสูงสุดก่อน ใช้งบประมาณอย่างประหยัดและคุ้มค่า</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.5.3</span><span class="way-t">ใช้ระบบการวางแผนและจัดสรรสื่อเทคโนโลยีที่มีอยู่เป็นหลักฐานในการขอรับงบประมาณสนับสนุนเพิ่มเติม และนำเสนอต่อคณะกรรมการสถานศึกษาอย่างสม่ำเสมอ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.5.4</span><span class="way-t">ประสานองค์กรปกครองส่วนท้องถิ่นและหน่วยงานที่เกี่ยวข้องขอรับการสนับสนุนโครงสร้างพื้นฐานอินเทอร์เน็ตและอุปกรณ์ดิจิทัล โดยใช้ผลสัมฤทธิ์ผู้เรียนเป็นหลักฐานสนับสนุน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.5.5</span><span class="way-t">สร้างระบบบำรุงรักษาและยืดอายุการใช้งานอุปกรณ์ดิจิทัล โดยมีครูที่มีทักษะด้านเทคนิครับผิดชอบดูแลอุปกรณ์ให้พร้อมใช้งานตลอดเวลา</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">4.6</span><div><div class="acc-title">ขับเคลื่อนการพัฒนาสมรรถนะดิจิทัลครูจากภายในสถานศึกษาเพื่อรับมือกับข้อจำกัดการอบรมและงบประมาณจากภายนอก</div><div class="acc-swot">S18,S19,S21 × T9,T10</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">4.6.1</span><span class="way-t">จัดหาสื่อเทคโนโลยีที่ทันสมัยและผ่านการประเมินคุณภาพในต้นทุนที่เหมาะสม เพื่อรับมือกับข้อจำกัดงบประมาณสนับสนุนสื่อจากภาครัฐ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.6.2</span><span class="way-t">สร้างระบบ Peer Learning ดิจิทัลในสถานศึกษา ให้ครูที่มีสมรรถนะสูงเป็นพี่เลี้ยงถ่ายทอดทักษะแก่ครูที่กำลังพัฒนา ลดการพึ่งพาการอบรมราคาแพงจากภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.6.3</span><span class="way-t">ใช้ผลสัมฤทธิ์ผู้เรียนที่ดีขึ้นจากสื่อเทคโนโลยีคุณภาพเป็นแรงบันดาลใจให้ครูพัฒนาสมรรถนะดิจิทัลอย่างต่อเนื่อง โดยนำเสนอกรณีศึกษาความสำเร็จในที่ประชุมครู</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">4.6.4</span><span class="way-t">จัดระบบการประเมินและติดตามผลการใช้สื่อเทคโนโลยีภายในสถานศึกษา เพื่อวางแผนพัฒนาสมรรถนะครูที่ตรงจุดโดยไม่ต้องรองบประมาณการอบรมจากภายนอกเสมอไป</span></div>
+</div></div></div>
+</div></div>
+<div id="g4-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">1 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">4.7</span><div><div class="acc-title">สร้างระบบพัฒนาสมรรถนะดิจิทัลและบริหารจัดการสื่อเทคโนโลยีภายใต้ข้อจำกัดงบประมาณและโครงสร้างพื้นฐาน</div><div class="acc-swot">W11-W13 × T9-T12</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">4.7.1</span><span class="way-t">ออกแบบกิจกรรมพัฒนาทักษะดิจิทัลที่ไม่ต้องพึ่งพาอินเทอร์เน็ตเพียงอย่างเดียว เพื่อให้ผู้เรียนทุกคนได้รับการพัฒนาอย่างเท่าเทียม</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">4.7.2</span><span class="way-t">พัฒนาทักษะดิจิทัลผ่านกิจกรรมที่ใช้ทรัพยากรน้อยแต่สร้างทักษะได้จริง เช่น การเรียนรู้แบบ Unplugged Computing และการสร้างสื่อง่ายๆ ด้วยอุปกรณ์ที่มีอยู่</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">4.7.3</span><span class="way-t">พัฒนาระบบ Peer Learning ในสถานศึกษา โดยให้ครูที่มีทักษะสูงเป็นพี่เลี้ยงถ่ายทอดความรู้ให้ครูคนอื่นอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">4.7.4</span><span class="way-t">สร้างระบบแรงจูงใจที่ไม่ใช่ตัวเงิน เช่น การยกย่องชมเชย การนำเสนอผลงาน และการให้เครดิตการพัฒนาวิชาชีพ เพื่อยกระดับความพึงพอใจครู</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">4.7.5</span><span class="way-t">ประสานหน่วยงานโทรคมนาคมและองค์กรปกครองส่วนท้องถิ่นเพื่อขอรับการสนับสนุนเครือข่ายอินเทอร์เน็ตและอุปกรณ์ดิจิทัลในระยะยาว</span></div>
+</div></div></div>
+</div></div>
+</div>
+<div id="panel-g5" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#3b82f6">G5</div><div><div class="det-eyebrow" style="color:#3b82f6">กลยุทธ์หลักที่ 5 · W×T</div><h2 class="det-title">ปฏิรูประบบนิเทศการศึกษาเชิงกัลยาณมิตรสู่การพัฒนาวิชาชีพครูอย่างต่อเนื่อง</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.2140 · ภายนอก = 0.2220</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#3b82f6">7</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#3b82f6">35</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#991b1b">W</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#92400e">T</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูได้รับการส่งเสริมให้เข้าร่วมกิจกรรมแลกเปลี่ยนเรียนรู้ทางวิชาชีพ (PLC)</td><td><div class="mini-bar"><div class="mini-fill" style="width:60%;background:#3b82f6"></div></div></td><td class="pni-val" style="color:#3b82f6">0.1814</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนนำผลการนิเทศมาแลกเปลี่ยนเรียนรู้ร่วมกันระหว่างผู้บริหารและครู</td><td><div class="mini-bar"><div class="mini-fill" style="width:64%;background:#3b82f6"></div></div></td><td class="pni-val" style="color:#3b82f6">0.1930</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีการวางแผนการนิเทศการศึกษาอย่างเป็นระบบเพื่อพัฒนางานวิชาการ</td><td><div class="mini-bar"><div class="mini-fill" style="width:66%;background:#3b82f6"></div></div></td><td class="pni-val" style="color:#3b82f6">0.1968</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ผู้บริหารมีการนิเทศและติดตามการจัดการเรียนการสอนในลักษณะกัลยาณมิตรอย่างต่อเนื่อง</td><td><div class="mini-bar"><div class="mini-fill" style="width:69%;background:#3b82f6"></div></div></td><td class="pni-val" style="color:#3b82f6">0.2079</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูมีความพึงพอใจในการทำงานอย่างต่อเนื่อง</td><td><div class="mini-bar"><div class="mini-fill" style="width:72%;background:#3b82f6"></div></div></td><td class="pni-val" style="color:#3b82f6">0.2169</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีทัศนคติเชิงบวกต่อการเรียนรู้จากการที่ครูจัดการสอนได้อย่างมีคุณภาพ</td><td><div class="mini-bar"><div class="mini-fill" style="width:73%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2194</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนมีการยกย่องชมเชยครูที่มีนวัตกรรมหรือวิธีปฏิบัติทางการสอนที่ดี</td><td><div class="mini-bar"><div class="mini-fill" style="width:75%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2261</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนสามารถปรับปรุงวิธีการสอนและการบริหารวิชาการได้ทันกับการเปลี่ยนแปลง</td><td><div class="mini-bar"><div class="mini-fill" style="width:78%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2330</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีพัฒนาการด้านผลสัมฤทธิ์ในห้องเรียนที่ครูได้รับการนิเทศอย่างสม่ำเสมอ</td><td><div class="mini-bar"><div class="mini-fill" style="width:84%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.2532</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g5','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g5','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g5','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g5','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">1 กลยุทธ์รอง</small></button>
+</div>
+<div id="g5-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">5.1</span><div><div class="acc-title">ปฏิรูประบบนิเทศภายในที่บูรณาการกับกระบวนการ PLC และเครือข่ายสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</div><div class="acc-swot">S22,S23,S24 × O22,O24,O25</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.1.1</span><span class="way-t">จัดทำแผนนิเทศการศึกษาประจำปีที่บูรณาการกับแผน PLC ของโรงเรียน กำหนดผู้รับผิดชอบ ตารางเวลา และเกณฑ์ประเมินผลที่ชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.1.2</span><span class="way-t">ประสานงานกับสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด เพื่อรับข้อเสนอแนะผลการนิเทศจากเขตพื้นที่ และนำมาบูรณาการกับระบบนิเทศภายในสถานศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.1.3</span><span class="way-t">จัดกระบวนการ PLC ให้เชื่อมโยงกับผลการนิเทศ โดยนำประเด็นจากการนิเทศมาเป็นวาระหลักในการแลกเปลี่ยนเรียนรู้และพัฒนาวิชาชีพประจำเดือน</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.1.4</span><span class="way-t">วางแผนการจัดสรรงบประมาณสนับสนุนจากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ดสำหรับกิจกรรมนิเทศที่ครอบคลุมและต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.1.5</span><span class="way-t">จัดทำรายงานสรุปผลการนิเทศและพัฒนาการของครูรายบุคคลทุกภาคเรียน เพื่อใช้เป็นข้อมูลในการวางแผนพัฒนาวิชาชีพต่อเนื่อง</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">5.2</span><div><div class="acc-title">เสริมสร้างระบบการนิเทศเชิงกัลยาณมิตรโดยผู้บริหารและผู้เชี่ยวชาญภายนอก</div><div class="acc-swot">S25,S26 × O21,O23,O26</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.2.1</span><span class="way-t">พัฒนาทักษะการนิเทศเชิงกัลยาณมิตรของผู้บริหาร โดยเข้ารับการอบรมด้าน Coaching และ Mentoring จากสถาบันอุดมศึกษาหรือองค์กรวิชาชีพ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.2.2</span><span class="way-t">กำหนดปฏิทินนิเทศชั้นเรียนของผู้บริหารอย่างน้อยเดือนละ 4 ห้องเรียน พร้อมจัดสนทนาสะท้อนคิด (Reflective Dialogue) ภายหลังการนิเทศทุกครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.2.3</span><span class="way-t">เชิญผู้เชี่ยวชาญจากสถาบันอุดมศึกษาในพื้นที่ร้อยเอ็ดมาร่วมนิเทศและให้คำปรึกษาครูในสาขาที่เชี่ยวชาญ ภาคเรียนละ 2 ครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.2.4</span><span class="way-t">นำข้อมูลป้อนกลับจากผู้ปกครองเกี่ยวกับการจัดการเรียนรู้มาประกอบการพัฒนารูปแบบการนิเทศที่ตอบสนองความต้องการของผู้เรียนได้ตรงจุด</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">5.2.5</span><span class="way-t">ใช้ทรัพยากรสนับสนุนจากหน่วยงานภายนอกจัดกิจกรรมพัฒนาวิชาชีพต่อเนื่องที่เชื่อมโยงกับผลการนิเทศอย่างน้อยปีละ 2 ครั้ง</span></div>
+</div></div></div>
+</div></div>
+<div id="g5-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">5.3</span><div><div class="acc-title">พัฒนาระบบยกย่องชมเชยและสร้างแรงจูงใจครูผ่านกระบวนการนิเทศและทรัพยากรภายนอก</div><div class="acc-swot">W14,W15 × O21,O26</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">5.3.1</span><span class="way-t">ออกแบบระบบยกย่องชมเชยครูที่มีวิธีปฏิบัติที่ดีด้านการสอน โดยเชื่อมโยงกับผลการนิเทศและผลสัมฤทธิ์ผู้เรียนอย่างมีหลักฐาน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.3.2</span><span class="way-t">จัดเวทีนำเสนอนวัตกรรมการสอน Best Practice ของครูต่อสาธารณะ ทั้งภายในโรงเรียนและเวทีระดับเครือข่ายสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด อย่างน้อยปีละ 1 ครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.3.3</span><span class="way-t">ประสานทรัพยากรจากหน่วยงานภายนอก เช่น รางวัล ทุนพัฒนาวิชาชีพ และการส่งไปศึกษาดูงาน สำหรับครูที่มีผลการปฏิบัติงานโดดเด่น</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.3.4</span><span class="way-t">นำข้อมูลป้อนกลับจากผู้ปกครองมาออกแบบกิจกรรมในชั้นเรียนที่ตอบสนองความต้องการและสร้างทัศนคติเชิงบวกของผู้เรียนต่อการเรียนรู้</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.3.5</span><span class="way-t">ติดตามการเปลี่ยนแปลงทัศนคติและแรงจูงใจครูจากระบบยกย่องชมเชย โดยสำรวจความพึงพอใจในการทำงานทุกปีการศึกษา</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">5.4</span><div><div class="acc-title">ปฏิรูประบบนิเทศเพื่อยกระดับผลสัมฤทธิ์ผู้เรียนโดยผู้เชี่ยวชาญและความร่วมมือจากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</div><div class="acc-swot">W16,W17 × O22,O23,O25</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">5.4.1</span><span class="way-t">จัดทำแผนพัฒนาวิธีการสอนเชิงนวัตกรรมสำหรับครูทุกคน โดยอิงจากผลการนิเทศและข้อมูลผลสัมฤทธิ์ผู้เรียน กำหนดเป้าหมายที่ชัดเจนและวัดผลได้</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.4.2</span><span class="way-t">ส่งครูเข้าร่วมโครงการพัฒนาวิชาชีพจากความร่วมมือของสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด และนำนวัตกรรมการสอนกลับมาใช้ในสถานศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.4.3</span><span class="way-t">เชิญผู้เชี่ยวชาญจากสถาบันอุดมศึกษาในพื้นที่ร้อยเอ็ดมาร่วมนิเทศและให้ Coaching เชิงวิชาการแก่ครู เน้นการสาธิตการสอนและการสะท้อนคิดร่วมกัน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.4.4</span><span class="way-t">ใช้งบประมาณสนับสนุนจากสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ดจัดโครงการพัฒนาวิธีการสอนที่เชื่อมโยงกับผลการนิเทศ มีการติดตามผล</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">5.4.5</span><span class="way-t">รายงานผลการยกระดับวิธีสอนและผลสัมฤทธิ์ผู้เรียนต่อคณะกรรมการสถานศึกษาและชุมชน เพื่อสร้างความเชื่อมั่นและการมีส่วนร่วมในการพัฒนาต่อเนื่อง</span></div>
+</div></div></div>
+</div></div>
+<div id="g5-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">5.5</span><div><div class="acc-title">เสริมสร้างระบบนิเทศภายในที่เข้มแข็งโดยใช้จุดแข็งด้าน PLC และการวางแผนรับมือกับข้อจำกัดนโยบายและเทคโนโลยีนิเทศ</div><div class="acc-swot">S22,S24 × T13</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">5.5.1</span><span class="way-t">ใช้กระบวนการ PLC ที่ครูได้รับการส่งเสริมให้เข้าร่วมเป็นกลไกหลักในการวิเคราะห์นโยบายการนิเทศที่ซับซ้อนจากกระทรวง เพื่อให้ครูทุกคนเข้าใจและปรับตัวได้รวดเร็ว</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.5.2</span><span class="way-t">ใช้แผนการนิเทศที่เป็นระบบช่วยให้โรงเรียนสามารถบูรณาการข้อกำหนดตามนโยบายนิเทศที่ซับซ้อนเข้ากับระบบนิเทศภายในได้อย่างเป็นระเบียบ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.5.3</span><span class="way-t">พัฒนาคู่มือการนิเทศที่ระบุขั้นตอน เทคนิค และเครื่องมือที่ใช้ได้จริงในบริบทของสถานศึกษา เพื่อรองรับนโยบายนิเทศที่อาจมีความซับซ้อน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.5.4</span><span class="way-t">วางแผนนิเทศแบบ onsite เป็นหลัก โดยใช้ระบบวางแผนการนิเทศที่มีอยู่เป็นฐาน พร้อมสนทนาสะท้อนคิดทันทีหลังการนิเทศทุกครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.5.5</span><span class="way-t">สร้างเครือข่ายนิเทศระหว่างโรงเรียนในสังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด แบ่งปันต้นทุนและทรัพยากร ลดข้อจำกัดของแต่ละสถานศึกษา</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">5.6</span><div><div class="acc-title">ยกระดับการนิเทศเชิงกัลยาณมิตรของผู้บริหารและความพึงพอใจของครูเพื่อรับมือกับข้อจำกัดระบบ e-Coaching</div><div class="acc-swot">S23,S25,S26 × T14,T15</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">5.6.1</span><span class="way-t">ใช้การที่โรงเรียนนำผลการนิเทศมาแลกเปลี่ยนเรียนรู้ร่วมกันภายในสถานศึกษาเป็นช่องทางหลัก เชื่อมต่อกับช่องทางออนไลน์ที่เข้าถึงง่ายแทนแพลตฟอร์มนิเทศราคาแพง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.6.2</span><span class="way-t">พัฒนาทักษะการนิเทศเชิงกัลยาณมิตรของผู้บริหารให้เข้มแข็งยิ่งขึ้น โดยการนิเทศแบบกัลยาณมิตรที่ทำด้วยตนเองช่วยทดแทนข้อจำกัดทางเทคโนโลยีของระบบ e-Coaching</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.6.3</span><span class="way-t">สร้างบรรยากาศการทำงานที่ส่งเสริมความพึงพอใจของครู เพื่อให้ครูพร้อมพัฒนาตนเองผ่านช่องทางที่เข้าถึงได้ง่ายกว่าโดยไม่ต้องพึ่งพาระบบเทคโนโลยีราคาแพง</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.6.4</span><span class="way-t">จัดกิจกรรมเสริมสร้างความสัมพันธ์ที่ดีระหว่างผู้บริหารกับครูผ่านกระบวนการนิเทศแบบกัลยาณมิตร เป็นกลไกทดแทนข้อจำกัดของระบบนิเทศดิจิทัล</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">5.6.5</span><span class="way-t">ใช้ผลการแลกเปลี่ยนเรียนรู้จากผลการนิเทศมาสร้างคลังความรู้การสอนภายในสถานศึกษา ทดแทนระบบ e-Coaching ที่ยังมีข้อจำกัด</span></div>
+</div></div></div>
+</div></div>
+<div id="g5-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">1 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">5.7</span><div><div class="acc-title">สร้างระบบนิเทศภายในที่เข้มแข็งและยั่งยืนภายใต้ข้อจำกัดนโยบายนิเทศและเทคโนโลยี</div><div class="acc-swot">W14-W17 × T13-T15</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">5.7.1</span><span class="way-t">พัฒนาระบบนิเทศที่เชื่อมโยงคุณภาพการสอนของครูกับผลการเรียนรู้และทัศนคติของผู้เรียนให้เห็นอย่างชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">5.7.2</span><span class="way-t">พัฒนาระบบประเมินและยกย่องครูที่โปร่งใสผ่านช่องทางที่เข้าถึงง่ายและไม่ต้องอาศัยเทคโนโลยีราคาแพง ทำให้ครูเห็นคุณค่าของการรับการนิเทศและพัฒนาตนเองอย่างต่อเนื่อง</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">5.7.3</span><span class="way-t">พัฒนาช่องทางแลกเปลี่ยนเรียนรู้วิธีการสอนระหว่างครูที่ใช้ต้นทุนต่ำ เช่น กลุ่ม Line วิดีโอสั้น และการนำเสนอในที่ประชุมครู ทดแทนข้อจำกัดของแพลตฟอร์มนิเทศออนไลน์</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">5.7.4</span><span class="way-t">สร้างระบบนิเทศภายในที่เข้มแข็งโดยไม่พึ่งพาเทคโนโลยีราคาแพง แต่เน้นการนิเทศแบบ face-to-face ที่ส่งผลโดยตรงต่อคุณภาพการสอน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">5.7.5</span><span class="way-t">รายงานผลการนิเทศและพัฒนาการครูต่อคณะกรรมการสถานศึกษาและชุมชน เพื่อสร้างการมีส่วนร่วมในการพัฒนาคุณภาพครูและผู้เรียนอย่างยั่งยืน</span></div>
+</div></div></div>
+</div></div>
+</div>
+<div id="panel-g6" class="panel">
+<div class="det-hdr"><div class="det-gbadge" style="background:#8b5cf6">G6</div><div><div class="det-eyebrow" style="color:#8b5cf6">กลยุทธ์หลักที่ 6 · S×O</div><h2 class="det-title">ขับเคลื่อนระบบประกันคุณภาพภายในสถานศึกษาสู่วัฒนธรรมคุณภาพที่ยั่งยืน</h2><p class="det-subtitle">PNI<sub>modified</sub> ภายใน = 0.1078 · ภายนอก = 0.1674</p><div class="det-kpi-row"><div class="det-kpi"><div class="det-kpi-n" style="color:#8b5cf6">8</div><div class="det-kpi-l">กลยุทธ์รอง</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#8b5cf6">35</div><div class="det-kpi-l">วิธีดำเนินการ</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#065f46">S</div><div class="det-kpi-l">สภาพแวดล้อมภายใน</div></div><div class="det-kpi"><div class="det-kpi-n" style="color:#1d4ed8">O</div><div class="det-kpi-l">สภาพแวดล้อมภายนอก</div></div></div></div></div>
+<div class="pni-section"><div class="section-title">ผลการวิเคราะห์ PNI<sub>modified</sub> รายข้อ (สภาพแวดล้อมภายใน)</div><table class="pni-table"><thead><tr><th>S/W</th><th>รายการ</th><th>Bar</th><th style="text-align:right">PNI</th></tr></thead><tbody>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนสามารถปรับเปลี่ยนระบบบริหารงานวิชาการให้ทันกับสภาพแวดล้อมที่เปลี่ยนแปลง</td><td><div class="mini-bar"><div class="mini-fill" style="width:32%;background:#8b5cf6"></div></div></td><td class="pni-val" style="color:#8b5cf6">0.0970</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">โรงเรียนมีกลไกกำกับ ติดตาม ตรวจสอบคุณภาพ และจัดทำรายงานการประเมินตนเองของสถานศึกษา (SAR)</td><td><div class="mini-bar"><div class="mini-fill" style="width:34%;background:#8b5cf6"></div></div></td><td class="pni-val" style="color:#8b5cf6">0.1019</td></tr>
+<tr><td><span class="pni-s" style="background:#d1fae5;color:#065f46">S</span></td><td class="pni-name-cell">ครูมีส่วนร่วมในการพัฒนามาตรฐานและคุณภาพการจัดการศึกษาของสถานศึกษา</td><td><div class="mini-bar"><div class="mini-fill" style="width:35%;background:#8b5cf6"></div></div></td><td class="pni-val" style="color:#8b5cf6">0.1050</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผู้เรียนมีคุณลักษณะอันพึงประสงค์ตามมาตรฐานที่สถานศึกษากำหนด</td><td><div class="mini-bar"><div class="mini-fill" style="width:36%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1072</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนนำผลการประเมินคุณภาพภายในมาพัฒนาแนวปฏิบัติที่ดี (Best Practice)</td><td><div class="mini-bar"><div class="mini-fill" style="width:37%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1108</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนมีการดำเนินงานประกันคุณภาพภายในครบทุกขั้นตอน</td><td><div class="mini-bar"><div class="mini-fill" style="width:37%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1115</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">โรงเรียนมีการกำหนดเป้าหมายและมาตรฐานคุณภาพการศึกษาที่ชัดเจน</td><td><div class="mini-bar"><div class="mini-fill" style="width:37%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1124</td></tr>
+<tr><td><span class="pni-s" style="background:#fee2e2;color:#991b1b">W</span></td><td class="pni-name-cell">ผลการทดสอบระดับชาติ (O-NET) ของโรงเรียนสูงขึ้นจากการพัฒนาระบบประกันคุณภาพ</td><td><div class="mini-bar"><div class="mini-fill" style="width:39%;background:#ef4444"></div></div></td><td class="pni-val" style="color:#ef4444">0.1168</td></tr>
+</tbody></table></div>
+<div class="sec-divider">กลยุทธ์รองและวิธีดำเนินการ · จำแนกตาม TOWS Matrix</div><div class="tows-nav">
+<button class="tows-btn so on" onclick="showTows('g6','SO',this)">SO · เชิงรุก<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wo" onclick="showTows('g6','WO',this)">WO · พลิกฟื้น<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn st" onclick="showTows('g6','ST',this)">ST · เชิงป้องกัน<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+<button class="tows-btn wt" onclick="showTows('g6','WT',this)">WT · เชิงรับ<br><small style="font-weight:400;opacity:.8">2 กลยุทธ์รอง</small></button>
+</div>
+<div id="g6-SO" class="tows-pane on"><div class="tows-summary"><b>SO · เชิงรุก</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">6.1</span><div><div class="acc-title">ขับเคลื่อนระบบ SAR และการบริหารงานวิชาการให้สอดคล้องกับมาตรฐานการศึกษาแห่งชาติและนโยบายของกระทรวงศึกษาธิการ</div><div class="acc-swot">S27,S28 × O28,O29</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.1.1</span><span class="way-t">ทบทวนและปรับปรุงระบบรายงานการประเมินตนเองของสถานศึกษา (SAR) ให้สอดคล้องกับมาตรฐานการศึกษาระดับชาติที่เปลี่ยนแปลง โดยดำเนินการภายใน 30 วันหลังจากกระทรวงประกาศมาตรฐานใหม่</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.1.2</span><span class="way-t">พัฒนาระบบรวบรวมและจัดเก็บหลักฐานคุณภาพแบบดิจิทัล ให้ครูทุกคนสามารถอัปโหลดหลักฐานได้อย่างสะดวกและปลอดภัย</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.1.3</span><span class="way-t">ใช้ความสามารถในการปรับเปลี่ยนระบบบริหารงานวิชาการให้ทันกับสภาพแวดล้อมที่เปลี่ยนแปลง เป็นกลไกหลักในการตอบสนองต่อนโยบายและมาตรฐานการศึกษาระดับชาติ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.1.4</span><span class="way-t">จัดอบรมครูและบุคลากรให้เข้าใจระบบประกันคุณภาพและบทบาทของตนในการสนับสนุนการจัดทำ SAR อย่างมีคุณภาพ ปีละ 1 ครั้ง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.1.5</span><span class="way-t">ส่งบุคลากรเข้าร่วมการประชุม อบรม และแลกเปลี่ยนเรียนรู้ด้านประกันคุณภาพที่จัดโดยสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด สำนักงานรับรองมาตรฐานและประเมินคุณภาพการศึกษา และหน่วยงานที่เกี่ยวข้อง</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#2d3a8c;color:#fff">6.2</span><div><div class="acc-title">เสริมสร้างการมีส่วนร่วมของครูและชุมชนในการพัฒนาคุณลักษณะผู้เรียนและระบบประกันคุณภาพ</div><div class="acc-swot">S29 × O27,O30</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.2.1</span><span class="way-t">จัดกระบวนการมีส่วนร่วมของครูทุกคนในการกำหนดมาตรฐานและตัวชี้วัดคุณภาพสถานศึกษา โดยใช้กระบวนการกลุ่มและการระดมสมองอย่างมีโครงสร้าง</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.2.2</span><span class="way-t">สำรวจความต้องการและความคาดหวังของผู้ปกครองและชุมชนต่อคุณภาพการศึกษาอย่างน้อยปีละ 1 ครั้ง และนำผลมาเป็นข้อมูลนำเข้าในการพัฒนาระบบประกันคุณภาพ</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.2.3</span><span class="way-t">จัดทำแผนพัฒนาคุณลักษณะอันพึงประสงค์ผู้เรียนที่สอดคล้องกับมาตรการจากหน่วยงานภายนอก และนำแผนลงสู่การปฏิบัติผ่านกิจกรรมพัฒนาผู้เรียนโดยอาศัยการมีส่วนร่วมของครู</span></div>
+<div class="way"><span class="way-n" style="background:#2d3a8c">6.2.4</span><span class="way-t">รายงานผลการพัฒนาคุณภาพและคุณลักษณะผู้เรียนต่อผู้ปกครองและชุมชนในรูปแบบที่เข้าใจง่าย เพื่อสร้างความโปร่งใสและความเชื่อมั่น</span></div>
+</div></div></div>
+</div></div>
+<div id="g6-WO" class="tows-pane"><div class="tows-summary"><b>WO · พลิกฟื้น</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">6.3</span><div><div class="acc-title">พัฒนาแนวปฏิบัติที่ดีและระบบประกันคุณภาพให้ครบวงจรโดยใช้นโยบายและมาตรฐานระดับชาติ</div><div class="acc-swot">W19,W20 × O28,O29</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">6.3.1</span><span class="way-t">จัดกระบวนการค้นหาและรวบรวมแนวปฏิบัติที่ดี (Best Practice) ของครูในสถานศึกษา โดยใช้กรอบจากนโยบายประกันคุณภาพของกระทรวงศึกษาธิการเป็นมาตรฐานการคัดเลือก</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.3.2</span><span class="way-t">จัดทำคู่มือแนวปฏิบัติที่ดีในแต่ละด้านของการบริหารงานวิชาการ เผยแพร่ให้ครูทุกคนเข้าถึงได้ และปรับปรุงให้ทันสมัยทุกปีการศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.3.3</span><span class="way-t">ออกแบบวงจรประกันคุณภาพ (PDCA) ที่ครบถ้วนทุกขั้นตอน โดยใช้มาตรฐานการศึกษาระดับชาติที่มีการเปลี่ยนแปลงเป็นกรอบ กำหนดผู้รับผิดชอบและปฏิทินดำเนินงานที่ชัดเจน</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.3.4</span><span class="way-t">จัดอบรมครูและบุคลากรให้เข้าใจและสามารถดำเนินการประกันคุณภาพได้ครบทุกขั้นตอน พร้อมฝึกทักษะการจัดทำหลักฐานร่องรอยคุณภาพ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.3.5</span><span class="way-t">ติดตามความครบถ้วนของวงจรประกันคุณภาพในทุกมาตรฐาน รายงานผลต่อผู้บริหารและคณะกรรมการสถานศึกษาทุกภาคเรียน</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#00695c;color:#fff">6.4</span><div><div class="acc-title">เสริมสร้างเป้าหมายคุณภาพและยกระดับผลการทดสอบระดับชาติโดยใช้โอกาสจากความคาดหวังชุมชนและมาตรการภายนอก</div><div class="acc-swot">W21,W22 × O27,O30</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#00695c">6.4.1</span><span class="way-t">จัดกระบวนการกำหนดเป้าหมายคุณภาพสถานศึกษาร่วมกับผู้ปกครอง ชุมชน และครู โดยใช้ความต้องการและความคาดหวังของชุมชนเป็นฐานในการตั้งเป้าหมายที่สมจริงและท้าทาย</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.4.2</span><span class="way-t">นำมาตรการส่งเสริมคุณลักษณะอันพึงประสงค์จากหน่วยงานภายนอกมาบูรณาการในแผนพัฒนาคุณภาพ โดยเชื่อมโยงคุณลักษณะดีกับสมรรถนะวิชาการที่ส่งผลต่อ O-NET</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.4.3</span><span class="way-t">จัดทำแผนยกระดับผลการทดสอบระดับชาติ (O-NET) รายกลุ่มสาระ ระบุกิจกรรมเสริม สื่อ และวิธีการสอนที่มีหลักฐานเชิงประจักษ์ว่าส่งผลต่อการยกระดับผลสอบ</span></div>
+<div class="way"><span class="way-n" style="background:#00695c">6.4.4</span><span class="way-t">รายงานความก้าวหน้าการบรรลุเป้าหมายคุณภาพต่อชุมชนและผู้ปกครองในรูปแบบที่เข้าใจง่าย เพื่อสร้างความไว้วางใจและการสนับสนุนอย่างต่อเนื่อง</span></div>
+</div></div></div>
+</div></div>
+<div id="g6-ST" class="tows-pane"><div class="tows-summary"><b>ST · เชิงป้องกัน</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">6.5</span><div><div class="acc-title">เสริมพลังระบบ SAR และการบริหารวิชาการให้รับมือกับงบประมาณจำกัดและแพลตฟอร์มดิจิทัลที่มีข้อจำกัด</div><div class="acc-swot">S27,S28 × T16,T17</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">6.5.1</span><span class="way-t">ออกแบบระบบประกันคุณภาพที่มีประสิทธิภาพสูงในต้นทุนต่ำ โดยใช้ความสามารถในการปรับเปลี่ยนระบบบริหารงานวิชาการที่ยืดหยุ่นรับมือกับข้อจำกัดงบประมาณ</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.5.2</span><span class="way-t">พัฒนาระบบจัดเก็บหลักฐานคุณภาพแบบ Hybrid ที่ใช้ได้ทั้ง digital และ paper-based โดยใช้กลไกการจัดทำ SAR ที่เข้มแข็งเป็นฐาน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.5.3</span><span class="way-t">พัฒนาระบบรายงานและบริหารจัดการข้อมูลประกันคุณภาพภายในสถานศึกษาที่ใช้งานง่ายและไม่ต้องพึ่งพาแพลตฟอร์มดิจิทัลราคาแพงจากภายนอก</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.5.4</span><span class="way-t">ประสานสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด เพื่อขอรับคำแนะนำและทรัพยากรสนับสนุนระบบประกันคุณภาพ โดยใช้ระบบ SAR ที่มีอยู่แล้วเป็นฐาน</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.5.5</span><span class="way-t">รายงานผลการประกันคุณภาพต่อคณะกรรมการสถานศึกษาและชุมชนในรูปแบบที่เข้าใจง่ายและประหยัดต้นทุน</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#7b4f00;color:#fff">6.6</span><div><div class="acc-title">ขับเคลื่อนคุณลักษณะอันพึงประสงค์ผู้เรียนและการมีส่วนร่วมของครูเพื่อรับมือกับข้อจำกัดทรัพยากรและการอบรมดิจิทัล</div><div class="acc-swot">S29 × T18,T19</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#7b4f00">6.6.1</span><span class="way-t">ใช้การมีส่วนร่วมของครูในการพัฒนามาตรฐานคุณภาพเพื่อสร้างระบบ Peer Training ด้านการประกันคุณภาพ ลดการพึ่งพาการอบรมดิจิทัลจากภายนอกที่มีข้อจำกัด</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.6.2</span><span class="way-t">ใช้คุณลักษณะอันพึงประสงค์ของผู้เรียนที่ดีเป็นหลักฐานในการดึงดูดทรัพยากรจากองค์กรปกครองส่วนท้องถิ่น</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.6.3</span><span class="way-t">พัฒนาครูด้านการประกันคุณภาพดิจิทัลผ่านกระบวนการ Peer Learning ในสถานศึกษา โดยไม่ต้องรองบประมาณการอบรมจากภายนอกเสมอไป</span></div>
+<div class="way"><span class="way-n" style="background:#7b4f00">6.6.4</span><span class="way-t">สร้างระบบประเมินและรายงานคุณลักษณะอันพึงประสงค์ผู้เรียนที่เชื่อมโยงกับระบบประกันคุณภาพภายใน</span></div>
+</div></div></div>
+</div></div>
+<div id="g6-WT" class="tows-pane"><div class="tows-summary"><b>WT · เชิงรับ</b> <span class="cnt-pill">2 กลยุทธ์รอง</span></div><div class="acc-list">
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">6.7</span><div><div class="acc-title">พัฒนาระบบประกันคุณภาพที่ยั่งยืนภายใต้ข้อจำกัดงบประมาณ ทรัพยากร และการพัฒนาดิจิทัล</div><div class="acc-swot">W19,W20,W21 × T16,T17,T18</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.7.1</span><span class="way-t">สร้างระบบแลกเปลี่ยนเรียนรู้เกี่ยวกับ Best Practice ระหว่างโรงเรียนในสังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด ผ่านช่องทางต้นทุนต่ำ</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.7.2</span><span class="way-t">ออกแบบวงจรประกันคุณภาพ PDCA ที่ใช้งานได้ทั้ง digital และ paper-based ทำให้โรงเรียนดำเนินการประกันคุณภาพได้ครบถ้วนแม้แพลตฟอร์มดิจิทัลมีข้อจำกัด</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.7.3</span><span class="way-t">กำหนดเป้าหมายคุณภาพที่สมจริงและท้าทายตามบริบทของสถานศึกษา ออกแบบแผนที่ใช้ทรัพยากรที่มีอยู่อย่างเต็มประสิทธิภาพ พร้อมระดมความร่วมมือจากชุมชนมาสนับสนุน</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.7.4</span><span class="way-t">วัดผลและรายงานความก้าวหน้าทุกปีการศึกษา เพื่อยืนยันว่าเป้าหมายคุณภาพที่กำหนดไว้สอดคล้องกับทรัพยากรที่มีและสามารถบรรลุได้จริง</span></div>
+</div></div></div>
+<div class="acc-item"><div class="acc-head" onclick="toggleAcc(this)" role="button" tabindex="0" aria-expanded="false"><span class="acc-num" style="background:#8b1a1a;color:#fff">6.8</span><div><div class="acc-title">ยกระดับผลการทดสอบระดับชาติผ่านการพัฒนาครูภายในเพื่อรับมือกับข้อจำกัดการอบรมดิจิทัลจากภายนอก</div><div class="acc-swot">W22 × T19</div></div><span class="acc-chevron">▾</span></div><div class="acc-body"><div class="ways-wrap">
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.8.1</span><span class="way-t">พัฒนาครูด้านการสอนที่เน้นสมรรถนะหลักผ่านกระบวนการ PLC ภายในสถานศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.8.2</span><span class="way-t">จัดทำแผนยกระดับผลการทดสอบระดับชาติรายกลุ่มสาระที่ใช้ทรัพยากรภายในสถานศึกษาเป็นหลัก ลดการพึ่งพาการอบรมจากภายนอกที่มีข้อจำกัด</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.8.3</span><span class="way-t">สร้างระบบติดตามผลการพัฒนาครูและความสัมพันธ์กับผลการทดสอบระดับชาติ เพื่อยืนยันประสิทธิผลของการพัฒนาครูผ่าน PLC ภายในสถานศึกษา</span></div>
+<div class="way"><span class="way-n" style="background:#8b1a1a">6.8.4</span><span class="way-t">ขยายผลแนวปฏิบัติที่ดีจากกระบวนการ PLC ที่ส่งผลต่อการยกระดับผลการทดสอบระดับชาติ ไปสู่กลุ่มสาระอื่นภายในสถานศึกษาอย่างเป็นระบบ</span></div>
+</div></div></div>
+</div></div>
+</div>
+
+</main>
+
+<footer class="site-footer" role="contentinfo">
+ <p>ร่างกลยุทธ์การบริหารงานวิชาการที่มีประสิทธิผล · สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาร้อยเอ็ด</p>
+ <p style="margin-top:4px">นางสาวสุพักตร์ศิริ พืชสิงห์ · สาขาวิชาการบริหารการศึกษา · คณะครุศาสตร์และการพัฒนามนุษย์ · มหาวิทยาลัยราชภัฏร้อยเอ็ด · วิเคราะห์โดย TOWS Matrix · PNI<sub>modified</sub></p>
+</footer>
+
+<script>
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current')});
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn){btn.classList.add('active');btn.setAttribute('aria-current','page')}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goTo(id){
+  const idx={'ov':0,'g1':1,'g2':2,'g3':3,'g4':4,'g5':5,'g6':6}[id];
+  showPanel(id,document.querySelectorAll('.nav-btn')[idx]);
+}
+function showTows(gid,tk,btn){
+  const panel=document.getElementById('panel-'+gid);
+  panel.querySelectorAll('.tows-pane').forEach(p=>p.classList.remove('on'));
+  panel.querySelectorAll('.tows-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById(gid+'-'+tk).classList.add('on');
+  btn.classList.add('on');
+}
+function toggleAcc(head){
+  const item=head.closest('.acc-item');
+  const open=item.classList.toggle('open');
+  head.setAttribute('aria-expanded',open);
+}
+document.querySelectorAll('.ov-card,.acc-head').forEach(el=>{
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}});
+});
+</script>
+</body>
+</html>
